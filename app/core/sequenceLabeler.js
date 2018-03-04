@@ -1,7 +1,10 @@
 'use strict';
 const _ = require('lodash');
+const fs = require('fs');
 const path = require('path');
+const config = require('config');
 const crfsuite = require('crfsuite');
+const vntk = require('vntk');
 const iobParser = require('./iob');
 const features = require('./features');
 const storyModel = require('../models/story');
@@ -20,7 +23,8 @@ class SequenceLabeler {
                 c2: 1e-3, // coefficient for L2 penalty
                 max_iterations: 300,
                 // include transitions that are possible, but not observed
-                feature_possible_transitions: 1
+                feature_possible_transitions: 1,
+                modelFileDir: config.get('modelConfig.MODELS_DIR')
             }, opt);
 
 
@@ -122,6 +126,22 @@ class SequenceLabeler {
                 console.log('Training with info: ', this.options);
                 return model_filename
             })
+    }
+
+    predict(storyId, sentence) {
+        let tagger = new crfsuite.Tagger();
+        let modelFileName = path.resolve(this.options.modelFileDir, `${storyId}.model`);
+
+        if (!fs.existsSync(modelFileName)) {
+            return [];
+        }
+
+        let posTags = vntk.pos_tag.tag(sentence);
+        let feats = posTags.map((token, i) => features.word2features(posTags, i, this.template))
+
+        tagger.open(modelFileName);
+        let nerTags = tagger.tag(feats)
+        return nerTags
     }
 
 }

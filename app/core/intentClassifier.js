@@ -12,6 +12,15 @@ class IntentClassifier {
     constructor() {
         this.INTENT_MODEL_NAME = `${config.get('modelConfig.MODELS_DIR')}/${config.get('modelConfig.INTENT_MODEL_NAME')}`
         this.TRAIN_DATA_NAME = `${config.get('modelConfig.MODELS_DIR')}/${config.get('modelConfig.TRAIN_DATA_NAME')}`
+
+        let modelBin = this.INTENT_MODEL_NAME + '.bin';
+        if (fs.existsSync(modelBin)) {
+            console.log('Load pre-trained model: ' + modelBin)
+            sentenceClassifer.loadModel(modelBin)
+                .then((res) => {
+                    console.log('Load pre-trained model ok!');
+                })
+        }
     }
 
     train() {
@@ -51,7 +60,7 @@ class IntentClassifier {
             .then((res) => {
                 console.log(res)
                 if (res.length > 0) {
-                    return res[0].label;
+                    return res[0].label.replace(/^__label__/, '')
                 } else {
                     return false
                 }
