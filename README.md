@@ -18,12 +18,12 @@ If you need to backup an old version before restore, then:
 
 2. Clone repository & Install dependencies
 
-> git clone https://github.com/vunb/vntk-chatbot-framework.git
-> cd vntk-chatbot-framework
-> npm install
+> git clone https://github.com/vunb/vntk-chatbot-framework.git  
+> cd vntk-chatbot-framework  
+> npm install  
 
 3. Run chatbot and open on your browser
 
 > npm start
 
-Then navigate to [http://localhost:3000/](http://localhost:3000/)
+Finally navigate to [http://localhost:3000/](http://localhost:3000/) to see project in action.
