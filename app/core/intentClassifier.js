@@ -36,7 +36,7 @@ class IntentClassifier {
                             loss: 'ns',
                             bucket: 2000000,
                             lr: 0.075,
-                            epoch: 100000
+                            epoch: 1000
                         })
                         .then((res) => {
                             console.log('model info after training:', res)
@@ -48,14 +48,14 @@ class IntentClassifier {
 
     predict(text) {
         return sentenceClassifer.predict(text, 5)
-        .then((res) => {
-            console.log(res)
-            if (res.length > 0) {
-                return res[0].label;
-            } else {
-                return false
-            }
-        })
+            .then((res) => {
+                console.log(res)
+                if (res.length > 0) {
+                    return res[0].label;
+                } else {
+                    return false
+                }
+            })
     }
 
     getData() {
