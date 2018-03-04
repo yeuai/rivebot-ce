@@ -1,0 +1,47 @@
+{
+  "name": "@vntk/chatbot",
+  "version": "0.1.0",
+  "description": "A vntk-based chatbot framework with Natural Language Understanding and Artificial Intelligence",
+  "main": "index.js",
+  "scripts": {
+    "setup": "node setup",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vntk/vntk-chatbot-framework.git"
+  },
+  "keywords": [
+    "ai-chatbot-framework",
+    "chatbot",
+    "natural-language-understanding",
+    "vntk",
+    "yeuai"
+  ],
+  "author": "vunb",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vntk/vntk-chatbot-framework/issues"
+  },
+  "homepage": "https://github.com/vntk/vntk-chatbot-framework#readme",
+  "dependencies": {
+    "@vntk/dictionary": "^1.0.0",
+    "body-parser": "^1.18.2",
+    "config": "^1.30.0",
+    "cors": "^2.8.4",
+    "crfsuite": "^0.9.3",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "fasttext": "^0.2.0",
+    "js-yaml": "^3.10.0",
+    "lodash": "^4.17.5",
+    "mongoose": "^5.0.8",
+    "morgan": "^1.9.0",
+    "vntk": "^1.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.1"
+  }
+}
