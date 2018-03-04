@@ -3,7 +3,7 @@ vntk-chatbot-framework
 
 An AI chatbot framework using VNTK and written in Nodejs.
 
-This is a part of project [yeu.ai](https://github.com/yeuai). An open platform for experiment and training Vietnamese robot!
+> This is a part of project [yeu.ai](https://github.com/yeuai). An open platform for experiment and training Vietnamese robot!
 
 Installation
 ============
