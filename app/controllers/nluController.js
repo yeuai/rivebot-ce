@@ -30,7 +30,7 @@ router.get('/chat/:text', (req, res, next) => {
     let result = {}
     intentClassifier.predict(input)
         .then((intent) => {
-            if (!intent) intent = config.get('DEFAULT_FALLBACK_INTENT_NAME')
+            if (!intent) intent = config.get('modelConfig.DEFAULT_FALLBACK_INTENT_NAME')
             return storyModel.findOne({
                 intentName: intent
             }).lean()
