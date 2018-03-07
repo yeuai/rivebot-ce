@@ -3,10 +3,9 @@ const _ = require('lodash');
 const fs = require('fs');
 const config = require('config');
 const vntk = require('vntk');
-const fasttext = require('fasttext');
 const storyModel = require('../models/story');
 
-const sentenceClassifer = new fasttext.Classifier();
+const sentenceClassifer = new vntk.FastTextClassifier();
 
 class IntentClassifier {
     constructor() {

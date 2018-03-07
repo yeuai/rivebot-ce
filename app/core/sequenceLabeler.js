@@ -136,7 +136,7 @@ class SequenceLabeler {
             return [];
         }
 
-        let posTags = vntk.pos_tag.tag(sentence);
+        let posTags = vntk.posTag().tag(sentence);
         let feats = posTags.map((token, i) => features.word2features(posTags, i, this.template))
 
         tagger.open(modelFileName);

@@ -62,6 +62,10 @@ router.get('/chat/:text', (req, res, next) => {
                 res.json(result)
             }
         })
+        .catch((err) => {
+            console.error('ERROR: ', err)
+            res.status(500).json(err)
+        })
 })
 
 
