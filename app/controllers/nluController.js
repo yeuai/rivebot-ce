@@ -1,5 +1,6 @@
 'use strict';
 
+const config = require('config')
 const router = require('express').Router()
 const IntentClassifier = require('../core/intentClassifier')
 const SequenceLabeler = require('../core/sequenceLabeler')
@@ -29,6 +30,7 @@ router.get('/chat/:text', (req, res, next) => {
     let result = {}
     intentClassifier.predict(input)
         .then((intent) => {
+            if (!intent) intent = config.get('DEFAULT_FALLBACK_INTENT_NAME')
             return storyModel.findOne({
                 intentName: intent
             }).lean()
@@ -39,17 +41,27 @@ router.get('/chat/:text', (req, res, next) => {
             }
 
             // check fulfill is complete
+            result['missingParameters'] = []
+            result['extractedParameters'] = {}
+            result['parameters'] = []
+            // result['complete'] = false
+            
             if (typeof complete === 'undefined' || complete == 'true') {
                 let storyId = story._id.toString()
-                result.intent = {
+                result['intent'] = {
                     name: story.intentName,
                     storyId: storyId,
                 }
                 let extractedParameters = []
-                if (parameters) {
+                if (parameters.length > 0) {
                     extractedParameters = sequenceLabeler.predict(storyId, input);
+
+
+                    result['extractedParameters'] = extractedParameters
+                } else {
+                    result['complete'] = true
                 }
-                return extractedParameters
+                return result;
             } else {
                 return null
             }

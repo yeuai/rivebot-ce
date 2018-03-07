@@ -55,9 +55,9 @@ class IntentClassifier {
     }
 
     predict(text) {
-        return sentenceClassifer.predict(text, 5)
+        return sentenceClassifer.predict(text, 3)
             .then((res) => {
-                console.log(res)
+                console.log('sentenceClassifer predict: ', res)
                 if (res.length > 0) {
                     return res[0].label.replace(/^__label__/, '')
                 } else {

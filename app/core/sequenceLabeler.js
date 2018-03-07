@@ -107,7 +107,7 @@ class SequenceLabeler {
     trainStory(storyId) {
         return storyModel.findById(storyId).lean()
             .then((story) => {
-                if (!story) return Promise.reject('not found story: ' + storyId``)
+                if (!story) return Promise.reject('not found story: ' + storyId ``)
                 let trainSentences = _.map(story.labeledSentences, (item) => item.data)
                 _.each(trainSentences, (sent, index) => {
                     console.log(`Feeding trainer, sent: `, index, sent);
@@ -118,10 +118,10 @@ class SequenceLabeler {
 
                 let model_filename = path.resolve(path.join(process.cwd(), `./model_files/${storyId}.model`))
                 console.log('Start training ...');
-        
+
                 this.trainer.train(model_filename);
                 console.log('Training done!, saved model to', model_filename);
-        
+
                 // write training info to text
                 console.log('Training with info: ', this.options);
                 return model_filename
@@ -138,10 +138,18 @@ class SequenceLabeler {
 
         let posTags = vntk.posTag().tag(sentence);
         let feats = posTags.map((token, i) => features.word2features(posTags, i, this.template))
-
         tagger.open(modelFileName);
         let nerTags = tagger.tag(feats)
-        return nerTags
+        let zipTokens = posTags.map((tagged, i) => [tagged[0], nerTags[i]])
+        return this.extractEntities(zipTokens)
+    }
+
+    extractEntities(taggedSentence) {
+        let entities = iobParser.matchEntities(taggedSentence);
+        return entities.reduce((res, entity) => {
+            res[`${entity[1]}`] = entity[3]
+            return res
+        }, {});
     }
 
 }
