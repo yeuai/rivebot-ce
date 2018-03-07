@@ -10,7 +10,7 @@ var intentClassifier = new IntentClassifier()
 var sequenceLabeler = new SequenceLabeler()
 
 router.get('/train/:id', (req, res, next) => {
-    let storyId = req.params.id
+    let storyId = req.param('id')
     intentClassifier.train()
         .then(result => {
             return sequenceLabeler.trainStory(storyId);
@@ -24,8 +24,8 @@ router.get('/train/:id', (req, res, next) => {
 })
 
 router.get('/chat/:text', (req, res, next) => {
-    let input = req.params.text
-    let complete = req.query.complete
+    let input = req.param('text')
+    let complete = req.param('complete')
     let parameters = []
     let result = {}
     intentClassifier.predict(input)
@@ -44,6 +44,7 @@ router.get('/chat/:text', (req, res, next) => {
             result['missingParameters'] = []
             result['extractedParameters'] = {}
             result['parameters'] = []
+            result['input'] = input;
             // result['complete'] = false
             
             if (typeof complete === 'undefined' || complete == 'true') {
@@ -53,19 +54,54 @@ router.get('/chat/:text', (req, res, next) => {
                     storyId: storyId,
                 }
                 let extractedParameters = []
+                let missingParameters = []
                 if (parameters.length > 0) {
                     extractedParameters = sequenceLabeler.predict(storyId, input);
 
+                    // check required parameters
+                    result['parameters'] = parameters.map((p) => {
+                        if (p.required && typeof extractedParameters[p.name] == 'undefined') {
+                            missingParameters.push(p.name)
+                        }
+
+                        return {
+                            name: p.name,
+                            type: p.type,
+                            required: p.required
+                        }
+                    })
 
                     result['extractedParameters'] = extractedParameters
+                    result['missingParameters'] = missingParameters
+
+                    if (missingParameters.length > 0) {
+                        result['complete'] = false
+                        result['currentNode'] = missingParameters[0].name
+                        result['speechResponse'] = missingParameters[0].prompt
+                    } else {
+                        result['complete'] = false
+                        result['parameters'] = extractedParameters
+                    }
                 } else {
                     result['complete'] = true
                 }
                 return result;
-            } else {
-                return null
+            } else if (complete == 'false') {
+                if (story.intentName !== 'cancel') {
+                    let storyId = req.param('storyId')
+
+                } else {
+                    result['currentNode'] = ''
+                    result['missingParameters'] = []
+                    result['parameters'] = {}
+                    result['intent'] = {}
+                    result['complete'] = true
+                }
             }
 
+            // verify speech response
+
+            return result
         })
         .then((result) => {
             if (!result) {
