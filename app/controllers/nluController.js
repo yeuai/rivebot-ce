@@ -13,8 +13,9 @@ const sequenceLabeler = new SequenceLabeler()
 const DEFAULT_WELCOME_INTENT_NAME = config.get('modelConfig.DEFAULT_WELCOME_INTENT_NAME')
 const DEFAULT_FALLBACK_INTENT_NAME = config.get('modelConfig.DEFAULT_FALLBACK_INTENT_NAME')
 
-function buildCompleteResponse(story, input) {
-    let result = {}
+function buildCompleteResponse(story, req) {
+    let input = req.param('input')
+    let result = req.body
     let parameters = []
     if (story.parameters) {
         parameters = story.parameters
@@ -68,7 +69,7 @@ function buildCompleteResponse(story, input) {
 }
 
 function buildNonCompleteResponse(story, req) {
-    let result = {}
+    let result = req.body
 
     if (story.intentName === 'cancel') {
         result['currentNode'] = ''
@@ -139,7 +140,6 @@ router.all('/chat/:text', (req, res, next) => {
                     storyId: story._id.toString()
                 }
                 result['speechResponse'] = story.speechResponse
-                result['speechResponse'] = story.speechResponse
                 res.json(result)
             })
     }
@@ -153,18 +153,27 @@ router.all('/chat/:text', (req, res, next) => {
             }).lean()
         })
         .then((story) => {
+            var responseResult;
             if (complete === false) {
-                return buildNonCompleteResponse(story, req)
+                responseResult = buildNonCompleteResponse(story, req)
             } else {
-                return buildCompleteResponse(story, input)
+                responseResult = buildCompleteResponse(story, req)
             }
+            return Promise.all([story, responseResult])
         })
-        .then((result) => {
-            let response = Object.assign(req.body, result);
+        .then(([story, result]) => {
+
+            if (result['complete']) {
+                if (story.apiTrigger) {
+                    // call api
+                }
+                result['speechResponse'] = story.speechResponse
+            }
+
             if (!result) {
                 res.json('unknow')
             } else {
-                res.json(response)
+                res.json(result)
             }
         })
         .catch((err) => {
