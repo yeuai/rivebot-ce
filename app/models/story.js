@@ -15,7 +15,11 @@ var labeledSentences = new Schema({
 
 var StorySchema = new Schema({
     storyName: String,
-    intentName: String,
+    intentName: {
+        type: String,
+        unique: true,
+        required: true
+    },
     apiTrigger: Boolean,
     speechResponse: String,
     parameters: [inputParameters],

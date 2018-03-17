@@ -33,5 +33,6 @@ router.use(function _mixinReq(req, res, next) {
 })
 
 router.use('/nlu', require('./nluController'));
+router.use('/stories', require('./storyController'));
 
 module.exports = router;
