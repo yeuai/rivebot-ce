@@ -3,7 +3,7 @@ vntk-chatbot-framework
 
 An AI chatbot framework using VNTK and written in Nodejs.
 
-> This is a part of project [yeu.ai](https://github.com/yeuai). An open platform for experiment and training Vietnamese robot!
+> This is a part of project [yeu.ai](https://github.com/yeuai). An open platform for experiment and training Vietnamese chatbot!
 
 Installation
 ============
@@ -18,7 +18,7 @@ If you need to backup an old version before restore, then:
 
 2. Clone repository & Install dependencies
 
-> git clone https://github.com/vunb/vntk-chatbot-framework.git  
+> git clone https://github.com/vntk/vntk-chatbot-framework.git  
 > cd vntk-chatbot-framework  
 > npm install  
 
