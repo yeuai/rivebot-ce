@@ -42,7 +42,7 @@ router.get('/:storyId', (req, res, next) => {
     if (!storyId) return res.status(400).end('missing story')
 
     // find record details
-    storyModel.find({})
+    storyModel.find({_id: storyId})
         .lean()
         .then((result) => {
             res.json(result)
