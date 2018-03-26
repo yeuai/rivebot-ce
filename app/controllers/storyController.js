@@ -28,8 +28,8 @@ router.post('/', (req, res, next) => {
     let story = req.body
     // console.log('data:', story)
     storyModel.create(story)
-        .then((res) => {
-            res.json(res)
+        .then((result) => {
+            res.json(result)
         })
         .catch((err) => {
             console.error('err:', err)

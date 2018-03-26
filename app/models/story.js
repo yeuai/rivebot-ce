@@ -21,6 +21,12 @@ var StorySchema = new Schema({
         required: true
     },
     apiTrigger: Boolean,
+    apiDetails: {
+        url: String,
+        requestType: String,
+        isJson: Boolean,
+        jsonData: Object
+    },
     speechResponse: String,
     parameters: [inputParameters],
     labeledSentences: [labeledSentences]
