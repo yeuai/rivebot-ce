@@ -5,7 +5,7 @@ var mongoose = require("mongoose");
 var cors = require("cors");
 
 var config = require("config");
-var controllers = require("./app/controllers");
+var controllers = require("./api/controllers");
 
 var app = express();
 var port = process.env.PORT || 3000;
