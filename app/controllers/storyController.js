@@ -42,7 +42,9 @@ router.get('/:storyId', (req, res, next) => {
     if (!storyId) return res.status(400).end('missing story')
 
     // find record details
-    storyModel.find({_id: storyId})
+    storyModel.find({
+            _id: storyId
+        })
         .lean()
         .then((result) => {
             res.json(result)
@@ -77,6 +79,53 @@ router.delete('/:storyId', (req, res, next) => {
 
     // find record details
     storyModel.findByIdAndRemove(storyId)
+        .lean()
+        .then((result) => {
+            res.json(result)
+        })
+        .catch(err => {
+            res.status(500).end(err)
+        })
+})
+
+router.put('/:storyId/labeled', (req, res, next) => {
+    let storyId = req.param('storyId')
+    if (!storyId) return res.status(400).end('missing story')
+
+    // find record details
+    storyModel.update({
+            _id: storyId
+        }, {
+            $push: {
+                labeledSentences: {
+                    data: req.body
+                }
+            }
+        })
+        .lean()
+        .then((result) => {
+            res.json(result)
+        })
+        .catch(err => {
+            res.status(500).end(err)
+        })
+})
+
+router.delete('/:storyId/labeled/:labeledId', (req, res, next) => {
+    let storyId = req.param('storyId')
+    let labeledId = req.param('labeledId')
+    if (!storyId || !labeledId) return res.status(400).end('missing story or labeled id')
+
+    // find record details
+    storyModel.update({
+            _id: storyId
+        }, {
+            $pull: {
+                labeledSentences: {
+                    _id: labeledId
+                }
+            }
+        })
         .lean()
         .then((result) => {
             res.json(result)

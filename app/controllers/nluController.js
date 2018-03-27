@@ -2,12 +2,15 @@
 
 const config = require('config')
 const router = require('express').Router()
+const vntk = require('vntk')
 const IntentClassifier = require('../core/intentClassifier')
 const SequenceLabeler = require('../core/sequenceLabeler')
 const storyModel = require('../models/story');
 
 const intentClassifier = new IntentClassifier()
 const sequenceLabeler = new SequenceLabeler()
+const posTag = vntk.posTag()
+const wordSent = vntk.wordSent()
 
 // load config name
 const DEFAULT_WELCOME_INTENT_NAME = config.get('modelConfig.DEFAULT_WELCOME_INTENT_NAME')
@@ -121,17 +124,30 @@ router.get('/train/:id', (req, res, next) => {
         })
 })
 
+router.get('/pos/:text', (req, res, next) => {
+    let text = req.param('text')
+    let tags = posTag.tag(text).map((tokens) => [tokens[0], tokens[1], 'O'])
+
+    res.json(tags)
+})
+
+router.get('/tok/:text', (req, res, next) => {
+    let text = req.param('text')
+    let tokens = wordSent.tag(text);
+    res.json(tokens)
+})
+
 router.all('/chat/:text', (req, res, next) => {
     let input = req.param('text')
     let complete = req.param('complete')
     let context = req.param('context', {})
-    
+
     if (input === DEFAULT_WELCOME_INTENT_NAME) {
         return storyModel.findOne({
-            intentName: DEFAULT_WELCOME_INTENT_NAME
-        })
-        .lean()
-        .then((story) => {
+                intentName: DEFAULT_WELCOME_INTENT_NAME
+            })
+            .lean()
+            .then((story) => {
                 let result = req.body;
                 result['input'] = input
                 result['complete'] = true
