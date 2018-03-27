@@ -48,11 +48,11 @@ angular.module('app.main')
                 var entity = $scope.namedEntity;
                 var label = $scope.tokenLabel.toUpperCase();
 
-                if (/^\s+/.test($scope.userInput)) {
+                if (!entity && (!$scope.userInput || /^\s+/.test($scope.userInput))) {
                     return alert('Vui lòng chọn lại thực thể có tên!')
                 }
 
-                var token1 = $http.get('/api/nlu/tok/' + $scope.userInput)
+                var token1 = !$scope.userInput ? Promise.resolve({data: []}) : $http.get('/api/nlu/tok/' + $scope.userInput)
                 var token2 = $http.get('/api/nlu/tok/' + entity)
                 Promise.all([token1, token2])
                     .then(function ([res1, res2]) {
@@ -60,7 +60,7 @@ angular.module('app.main')
                         var selectedWords = res2.data
                         var startLen = startedWords.length
 
-                        if ((startLen < $scope.posTags.length && $scope.posTags[startLen][0] !== selectedWords[0]) && ($scope.posTags[startLen - 1][0] !== selectedWords[0])) {
+                        if ((startLen < $scope.posTags.length && $scope.posTags[startLen][0] !== selectedWords[0]) && (startLen > 0 && $scope.posTags[startLen - 1][0] !== selectedWords[0])) {
                             startLen -= 1
                         }
 
