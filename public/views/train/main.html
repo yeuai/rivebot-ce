@@ -1,0 +1,61 @@
+<div class="page-header">
+    <div>
+        <h1>Yeuai's Class Room</h1>
+        <i>Train your story for possible user inputs.
+            <br>Tag required parameters using mouse and give em labels</i>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-md-6 train-area">
+        <div id="sentences" class="form-control" placeholder="Enter sample user input" contenteditable="true" ng-model="sentences"
+            ng-mouseup="mouseUp($event)"></div>
+        <br>
+        <div class="pull-left labels">
+            <span id="action">
+                <b>Intent</b> :
+                <span ng-bind="story.intentName">intentName</span>
+            </span>
+            <br>
+            <span id="labels">
+                <b>Parameters</b> :
+                <span ng-bind="story.parameters.join()">intentName</span>
+            </span>
+        </div>
+        <div class="pull-right">
+            <button type="button" class="btn btn-default" ng-click="clear()">Clear</button>
+            <button id="trainButton" class="btn btn-primary" ng-click="posTag()">Start Labeling</button>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="span4">
+            <label for="tokenLabel" style="color:#337ab7">Mark label:
+                <span ng-bind="namedEntity"></span>
+            </label>
+            <input id="tokenLabel" class="form-control" type="text" ng-model="tokenLabel" required keyboard-enter="labelEntity()" ng-disabled="!isPosLabeled"
+                style="text-transform:uppercase">
+        </div>
+        <div class="clearfix">
+        </div>
+        <div class="span4">
+            <button type="button" class="btn btn-primary" id="btnBuild" ng-click="buildModel(story._id)">Build Model</button>
+            <button type="button" class="btn btn-primary" id="btnInsertLabeledSentence" ng-click="addToTestSet(story._id)">Add to Test Set</button>
+        </div>
+        <div class="row">
+        </div>
+        <div class="span4" id="output">
+            <span ng-bind="posTagAndLabel">
+        </div>
+
+        <div class="row">
+            <ol>
+                <li ng-repeat="label in story.labeledSentences track by $index">
+                    <a ng-click="removeSentence(story._id, label._id)" style="cursor: hand;">Delete</a>
+                    <span ng-bind="label.data"></span>
+                </li>
+            </ol>
+        </div>
+        <div class="span4" id="instance">
+        </div>
+    </div>
+</div>
