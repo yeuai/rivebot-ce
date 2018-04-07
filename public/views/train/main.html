@@ -50,7 +50,7 @@
         <div class="row">
             <ol>
                 <li ng-repeat="label in story.labeledSentences track by $index">
-                    <a ng-click="removeSentence(story._id, label._id)" style="cursor: hand;">Delete</a>
+                    <a ng-click="removeSentence(story._id, label._id, $index)" style="cursor: hand;">Delete</a>
                     <span ng-bind="label.data"></span>
                 </li>
             </ol>

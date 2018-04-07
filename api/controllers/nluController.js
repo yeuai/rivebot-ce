@@ -9,7 +9,7 @@ const storyModel = require('../models/story');
 
 const intentClassifier = new IntentClassifier()
 const sequenceLabeler = new SequenceLabeler()
-const posTag = vntk.posTag()
+const tagger = vntk.posTag()
 const wordSent = vntk.wordSent()
 
 // load config name
@@ -20,7 +20,9 @@ function buildCompleteResponse(story, req) {
     let input = req.param('input')
     let result = req.body
     let parameters = []
-    if (story.parameters) {
+    if (!story) {
+        throw new Error('Not found story: ' + input)
+    } if (story.parameters) {
         parameters = story.parameters
     }
 
@@ -126,7 +128,7 @@ router.get('/train/:id', (req, res, next) => {
 
 router.get('/pos/:text', (req, res, next) => {
     let text = req.param('text')
-    let tags = posTag.tag(text).map((tokens) => [tokens[0], tokens[1], 'O'])
+    let tags = tagger.tag(text).map((tokens) => [tokens[0], tokens[1], 'O'])
 
     res.json(tags)
 })

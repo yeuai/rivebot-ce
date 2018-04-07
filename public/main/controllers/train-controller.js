@@ -113,19 +113,17 @@ angular.module('app.main')
                 var labeledSentence = $scope.posTags
                 $http.put('/api/stories/' + storyId + '/labeled', labeledSentence)
                     .then(function (res) {
-                        var story = res.data
-                        console.log('Result: ', story)
-                        $scope.story.labeledSentences.push({
-                            data: $scope.posTags
-                        })
+                        var result = res.data
+                        console.log('Result: ', result)
+                        $scope.story.labeledSentences = result.labeledSentences
                     });
             }
 
-            $scope.removeSentence = function (storyId, sentenceId) {
+            $scope.removeSentence = function (storyId, sentenceId, index) {
                 $http.delete('/api/stories/' + storyId + '/labeled/' + sentenceId)
                     .then(function (res) {
-                        var story = res.data
-                        console.log('Result: ', story)
+                        $scope.story.labeledSentences.splice(index, 1);
+                        console.log('Delete ok: ', res.data)
                     });
             }
         }
