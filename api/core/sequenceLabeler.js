@@ -117,8 +117,16 @@ class SequenceLabeler {
                 })
 
                 let model_filename = path.resolve(path.join(process.cwd(), `./model_files/${storyId}.model`))
-                console.log('Start training ...');
+                let iobOutput = path.resolve(path.join(process.cwd(), `./model_files/${storyId}.conll`))
+                console.log(`
+                Start training ...
+                ------------------
+                > Trainset: ${iobOutput}
+                > Output: ${model_filename}
+                `);
 
+                // saving iob for testing
+                iobParser.saveFile(trainSentences, iobOutput)
                 this.trainer.train(model_filename);
                 console.log('Training done!, saved model to', model_filename);
 

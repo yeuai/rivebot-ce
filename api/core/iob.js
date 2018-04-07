@@ -1,5 +1,6 @@
 'use strict';
 const _ = require('lodash');
+const async = require('async');
 const fs = require('fs');
 const path = require('path');
 
@@ -22,7 +23,31 @@ class IobParser {
     }
 
     saveFile(sents, filename) {
-        // TODO: save to file
+        let writeFile = new Promise((resolve, reject) => {
+            let stream = fs.createWriteStream(filename);
+            console.log('Saving Iob file: ' + filename);
+            
+            // write only a sentence at one time.
+            async.eachLimit(sents, 1, (sent, cb1) => {
+                async.each(sent, (token, cb2) => {
+                    let data = `${token.join('\t')}\n`;
+                    stream.write(data, 'utf8', cb2);
+                }, (err) => {
+                    // end a sentence.
+                    stream.write('\n', 'utf8', cb1);
+                });
+            }, (err) => {
+                stream.end();
+            });
+        
+            stream.on('finish', () => resolve(filename));
+            stream.on('error', reject);
+        });
+        
+        return writeFile.then((result) => {
+            console.log('Saved IOB done:' + result);
+            return result;
+        });
     }
 
     /**
