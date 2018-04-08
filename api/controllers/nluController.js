@@ -3,13 +3,14 @@
 const config = require('config')
 const router = require('express').Router()
 const vntk = require('vntk')
+const handlebars = require('handlebars')
 const IntentClassifier = require('../core/intentClassifier')
 const SequenceLabeler = require('../core/sequenceLabeler')
 const storyModel = require('../models/story');
 
 const intentClassifier = new IntentClassifier()
 const sequenceLabeler = new SequenceLabeler()
-const posTag = vntk.posTag()
+const tagger = vntk.posTag()
 const wordSent = vntk.wordSent()
 
 // load config name
@@ -20,7 +21,9 @@ function buildCompleteResponse(story, req) {
     let input = req.param('input')
     let result = req.body
     let parameters = []
-    if (story.parameters) {
+    if (!story) {
+        throw new Error('Not found story: ' + input)
+    } if (story.parameters) {
         parameters = story.parameters
     }
 
@@ -40,6 +43,7 @@ function buildCompleteResponse(story, req) {
     let missingParameters = []
     if (parameters.length > 0) {
         extractedParameters = sequenceLabeler.predict(storyId, input);
+        console.log('sequenceLabeler predict: ', extractedParameters)
 
         // check required parameters
         result['parameters'] = parameters.map((p) => {
@@ -62,7 +66,7 @@ function buildCompleteResponse(story, req) {
             result['currentNode'] = missingParameters[0].name
             result['speechResponse'] = missingParameters[0].prompt
         } else {
-            result['complete'] = false
+            result['complete'] = true
             result['parameters'] = extractedParameters
         }
     } else {
@@ -126,7 +130,7 @@ router.get('/train/:id', (req, res, next) => {
 
 router.get('/pos/:text', (req, res, next) => {
     let text = req.param('text')
-    let tags = posTag.tag(text).map((tokens) => [tokens[0], tokens[1], 'O'])
+    let tags = tagger.tag(text).map((tokens) => [tokens[0], tokens[1], 'O'])
 
     res.json(tags)
 })
@@ -183,7 +187,8 @@ router.all('/chat/:text', (req, res, next) => {
                 if (story.apiTrigger) {
                     // call api
                 }
-                result['speechResponse'] = story.speechResponse
+                var template = handlebars.compile(story.speechResponse)
+                result['speechResponse'] = template(result.extractedParameters)
             }
 
             if (!result) {

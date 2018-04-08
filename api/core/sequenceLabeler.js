@@ -56,7 +56,7 @@ class SequenceLabeler {
             'T[-2][1]', 'T[-1][1]', 'T[0][1]', 'T[1][1]', 'T[2][1]',
             'T[-2,-1][1]', 'T[-1,0][1]', 'T[0,1][1]', 'T[1,2][1]',
             //# ner
-            'T[-3][3]', 'T[-2][3]', 'T[-1][3]',
+            // 'T[-3][2]', 'T[-2][2]', 'T[-1][2]',
         ];
     }
 
@@ -105,9 +105,11 @@ class SequenceLabeler {
     }
 
     trainStory(storyId) {
-        return storyModel.findById(storyId).lean()
+        return storyModel.findById(storyId)
+            .select('labeledSentences')
+            .lean()
             .then((story) => {
-                if (!story) return Promise.reject('not found story: ' + storyId ``)
+                if (!story) return Promise.reject('not found story: ' + storyId)
                 let trainSentences = _.map(story.labeledSentences, (item) => item.data)
                 _.each(trainSentences, (sent, index) => {
                     console.log(`Feeding trainer, sent: `, index, sent);
@@ -117,8 +119,16 @@ class SequenceLabeler {
                 })
 
                 let model_filename = path.resolve(path.join(process.cwd(), `./model_files/${storyId}.model`))
-                console.log('Start training ...');
+                let iobOutput = path.resolve(path.join(process.cwd(), `./model_files/${storyId}.conll`))
+                console.log(`
+                Start training ...
+                ------------------
+                > Trainset: ${iobOutput}
+                > Output: ${model_filename}
+                `);
 
+                // saving iob for testing
+                iobParser.saveFile(trainSentences, iobOutput)
                 this.trainer.train(model_filename);
                 console.log('Training done!, saved model to', model_filename);
 

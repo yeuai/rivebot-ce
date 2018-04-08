@@ -23,7 +23,7 @@
             </span>
         </div>
         <div class="pull-right">
-            <button type="button" class="btn btn-default" ng-click="clear()">Clear</button>
+            <button type="button" class="btn btn-default" ng-click="clear()">New</button>
             <button id="trainButton" class="btn btn-primary" ng-click="posTag()">Start Labeling</button>
         </div>
     </div>
@@ -33,7 +33,7 @@
                 <span ng-bind="namedEntity"></span>
             </label>
             <input id="tokenLabel" class="form-control" type="text" ng-model="tokenLabel" required keyboard-enter="labelEntity()" ng-disabled="!isPosLabeled"
-                style="text-transform:uppercase">
+                style="text-transform:lowercase">
         </div>
         <div class="clearfix">
         </div>
@@ -50,7 +50,7 @@
         <div class="row">
             <ol>
                 <li ng-repeat="label in story.labeledSentences track by $index">
-                    <a ng-click="removeSentence(story._id, label._id)" style="cursor: hand;">Delete</a>
+                    <a ng-click="removeSentence(story._id, label._id, $index)" style="cursor: hand;">Delete</a>
                     <span ng-bind="label.data"></span>
                 </li>
             </ol>

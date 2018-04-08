@@ -59,3 +59,4 @@ typings/
 
 .vscode
 model_files
+package-lock.json

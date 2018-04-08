@@ -24,13 +24,16 @@ angular.module('app.main')
 
             $scope.removeStory = (storyId, index) => {
                 if (!storyId) return false;
-
+                
                 $http.delete('/api/stories/' + storyId)
                     .then(function (res) {
                         $scope.story = {}
                         $scope.stories.splice(index, 1)
                         alert('Delete ok!')
-                    });
+                    })
+                    .catch(function (err) {
+                        return alert('ERROR: ' + err);
+                    })
             }
 
             $scope.createNew = () => {

@@ -27,6 +27,10 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
     let story = req.body
     // console.log('data:', story)
+    if (!story || typeof story.intentName !== 'string') {
+        return res.status(400).end('Missing intentName')
+    }
+    story.intentName = story.intentName.replace(/\s+/g, '_')
     storyModel.create(story)
         .then((result) => {
             res.json(result)
@@ -78,6 +82,7 @@ router.delete('/:storyId', (req, res, next) => {
     if (!storyId) return res.status(400).end('missing story')
 
     // find record details
+    // TODO: system intent can not remove (init_conversation, fallback, cancel)
     storyModel.findByIdAndRemove(storyId)
         .lean()
         .then((result) => {
@@ -93,7 +98,7 @@ router.put('/:storyId/labeled', (req, res, next) => {
     if (!storyId) return res.status(400).end('missing story')
 
     // find record details
-    storyModel.update({
+    storyModel.findOneAndUpdate({
             _id: storyId
         }, {
             $push: {
@@ -101,7 +106,10 @@ router.put('/:storyId/labeled', (req, res, next) => {
                     data: req.body
                 }
             }
+        }, {
+            new: true
         })
+        .select('labeledSentences')
         .lean()
         .then((result) => {
             res.json(result)
@@ -114,7 +122,7 @@ router.put('/:storyId/labeled', (req, res, next) => {
 router.delete('/:storyId/labeled/:labeledId', (req, res, next) => {
     let storyId = req.param('storyId')
     let labeledId = req.param('labeledId')
-    if (!storyId || !labeledId) return res.status(400).end('missing story or labeled id')
+    if (!storyId || !labeledId || labeledId === 'undefined') return res.status(400).end('missing story or labeled id')
 
     // find record details
     storyModel.update({
@@ -131,7 +139,7 @@ router.delete('/:storyId/labeled/:labeledId', (req, res, next) => {
             res.json(result)
         })
         .catch(err => {
-            res.status(500).end(err)
+            res.status(500).end(err && err.toString())
         })
 })
 
