@@ -56,7 +56,7 @@ class SequenceLabeler {
             'T[-2][1]', 'T[-1][1]', 'T[0][1]', 'T[1][1]', 'T[2][1]',
             'T[-2,-1][1]', 'T[-1,0][1]', 'T[0,1][1]', 'T[1,2][1]',
             //# ner
-            'T[-3][2]', 'T[-2][2]', 'T[-1][2]',
+            // 'T[-3][2]', 'T[-2][2]', 'T[-1][2]',
         ];
     }
 
@@ -105,7 +105,9 @@ class SequenceLabeler {
     }
 
     trainStory(storyId) {
-        return storyModel.findById(storyId).lean()
+        return storyModel.findById(storyId)
+            .select('labeledSentences')
+            .lean()
             .then((story) => {
                 if (!story) return Promise.reject('not found story: ' + storyId)
                 let trainSentences = _.map(story.labeledSentences, (item) => item.data)

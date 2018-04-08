@@ -42,6 +42,7 @@ function buildCompleteResponse(story, req) {
     let missingParameters = []
     if (parameters.length > 0) {
         extractedParameters = sequenceLabeler.predict(storyId, input);
+        console.log('sequenceLabeler predict: ', extractedParameters)
 
         // check required parameters
         result['parameters'] = parameters.map((p) => {
