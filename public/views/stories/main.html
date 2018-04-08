@@ -16,7 +16,7 @@
         <div class="col-md-4 stories">
             <div ng-if="stories.length > 0">
                 <div class="story" ng-repeat="story in stories track by $index">
-                    <h2 ng-bind="story.storyName">storyName</h2>
+                    <h3 ng-bind="story.storyName">storyName</h3>
                     <button type="button" class="btn btn-primary" id="btnEdit" ng-click="editStory(story)">Edit</button>
                     <button type="button" class="btn btn-primary" ng-click="openTrainDialog(story)">Train</button>
                     <button type="button" class="btn btn-primary" ng-click="removeStory(story._id, $index)">Delete</button>
@@ -31,16 +31,16 @@
             <form name="storyForm" ng-submit="saveStory(story)">
                 <div class="row">
                     <div class="col-md-8">
-                        <h2 ng-if="!story._id">Create new story</h2>
-                        <h2 ng-if="story._id">Edit story (
-                            <span ng-bind="story.storyName"></span>)</h2>
+                        <h3 ng-if="!story._id">Create new story</h3>
+                        <h3 ng-if="story._id">Edit story (
+                            <span ng-bind="story.storyName"></span>)</h3>
                     </div>
                     <div class="col-md-4">
-                        <h2 class="pull-right">
+                        <h3 class="pull-right">
                             <button type="button" class="btn btn-default" ng-click="openTrainDialog(story)" ng-disabled="!story._id">Build</button>
                             <button type="button" class="btn btn-success" ng-click="createNew()">Reset</button>
                             <button type="submit" class="btn btn-primary">Save</button>
-                        </h2>
+                        </h3>
                     </div>
                 </div>
                 <div class="span4">

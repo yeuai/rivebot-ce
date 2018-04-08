@@ -82,6 +82,7 @@ router.delete('/:storyId', (req, res, next) => {
     if (!storyId) return res.status(400).end('missing story')
 
     // find record details
+    // TODO: system intent can not remove (init_conversation, fallback, cancel)
     storyModel.findByIdAndRemove(storyId)
         .lean()
         .then((result) => {
