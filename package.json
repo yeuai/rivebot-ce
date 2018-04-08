@@ -35,6 +35,7 @@
     "crfsuite": "^0.9.3",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
+    "handlebars": "^4.0.11",
     "js-yaml": "^3.10.0",
     "lodash": "^4.17.5",
     "mongoose": "^5.0.8",

@@ -46,7 +46,7 @@ angular.module('app.main')
 
             $scope.labelEntity = function () {
                 var entity = $scope.namedEntity;
-                var label = $scope.tokenLabel.toUpperCase();
+                var label = $scope.tokenLabel.toLowerCase();
 
                 if (!entity && (!$scope.userInput || /^\s+/.test($scope.userInput))) {
                     return alert('Vui lòng chọn lại thực thể có tên!')

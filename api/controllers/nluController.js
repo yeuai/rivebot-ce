@@ -3,6 +3,7 @@
 const config = require('config')
 const router = require('express').Router()
 const vntk = require('vntk')
+const handlebars = require('handlebars')
 const IntentClassifier = require('../core/intentClassifier')
 const SequenceLabeler = require('../core/sequenceLabeler')
 const storyModel = require('../models/story');
@@ -65,7 +66,7 @@ function buildCompleteResponse(story, req) {
             result['currentNode'] = missingParameters[0].name
             result['speechResponse'] = missingParameters[0].prompt
         } else {
-            result['complete'] = false
+            result['complete'] = true
             result['parameters'] = extractedParameters
         }
     } else {
@@ -186,7 +187,8 @@ router.all('/chat/:text', (req, res, next) => {
                 if (story.apiTrigger) {
                     // call api
                 }
-                result['speechResponse'] = story.speechResponse
+                var template = handlebars.compile(story.speechResponse)
+                result['speechResponse'] = template(result.extractedParameters)
             }
 
             if (!result) {
