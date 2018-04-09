@@ -49,7 +49,11 @@ class IntentClassifier {
                         .then((res) => {
                             console.log('model info after training:', res)
                             resolve([trainFeatures, trainLabels])
-                        });
+                        })
+                        .catch((err) => {
+                            console.error('sentenceClassifer train error:', err);
+                            reject(err);
+                        })
                 })
             })
     }
