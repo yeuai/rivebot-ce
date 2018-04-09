@@ -9,9 +9,11 @@ var controllers = require("./api/controllers");
 
 var app = express();
 var port = process.env.PORT || 3000;
+var DB_HOST = process.env.DB_HOST || config.get('dbConfig.DB_HOST');
+var DB_NAME = process.env.DB_NAME || config.get('dbConfig.DB_NAME');
 
 // db info
-var constr = `${config.get('dbConfig.DB_HOST')}/${config.get('dbConfig.DB_NAME')}`
+var constr = `${DB_HOST}/${DB_NAME}`
 mongoose.connect(constr, (err) => {
     if (!err) {
         console.log('connect db ok: ', constr)
