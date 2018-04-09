@@ -7,7 +7,7 @@ services:
     ports:
       - "3000:3000"
     links:
-      - mongo
+      - mongodb
   mongodb:
     container_name: mongodb
     image: mongo
