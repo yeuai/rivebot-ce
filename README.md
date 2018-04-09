@@ -33,8 +33,10 @@ Finally navigate to [http://localhost:3000/](http://localhost:3000/) to see proj
 * Documentation: [Install Docker Compose](https://docs.docker.com/compose/install/)
 
 ```bash
-docker-compose build
-docker-compose up
+> git clone https://github.com/vntk/vntk-chatbot-framework.git  
+> cd vntk-chatbot-framework  
+> docker-compose build  
+> docker-compose up  
 ```
 
 # Dependencies
