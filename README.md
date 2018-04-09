@@ -8,7 +8,11 @@ An AI chatbot framework using VNTK and written in Nodejs.
 Installation
 ============
 
-1. Import demo database, using mongodb:
+**Notice**: Before start chatbot as a service, you need restore initial database, using mogodb in the corresponding way.
+
+### Opt1 - Git Clone
+
+1. Import demo database, using mongodb (you have installed before):
 
 > mongorestore --drop --db=yeu-ai --dir=dump/yeu-ai/
 
@@ -28,15 +32,25 @@ If you need to backup an old version before restore, then:
 
 Finally navigate to [http://localhost:3000/](http://localhost:3000/) to see project in action.
 
-### Docker Compose
+### Opt2 - Docker Compose
 
-* Documentation: [Install Docker Compose](https://docs.docker.com/compose/install/)
+* Docker: [Install Docker](https://docs.docker.com/install/)
+* Compose: [Install Docker Compose](https://docs.docker.com/compose/install/)
 
 ```bash
 > git clone https://github.com/vntk/vntk-chatbot-framework.git  
 > cd vntk-chatbot-framework  
+
+# build & start chatbot as a service
 > docker-compose build  
-> docker-compose up  
+> docker-compose up -d  
+
+# import database
+> docker exec -it mongodb bash
+> mongorestore --drop --db=yeu-ai --dir=dump/yeu-ai/
+
+# check logs
+> docker logs chatbot -f
 ```
 
 # Dependencies
