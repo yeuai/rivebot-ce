@@ -27,3 +27,28 @@ If you need to backup an old version before restore, then:
 > npm start
 
 Finally navigate to [http://localhost:3000/](http://localhost:3000/) to see project in action.
+
+### Docker Compose
+
+* Documentation: [Install Docker Compose](https://docs.docker.com/compose/install/)
+
+```bash
+docker-compose build
+docker-compose up
+```
+
+# Dependencies
+
+* [vntk - Vietnamese NLP Toolkit for Node](https://github.com/vunb/vntk)
+* [crfsuite - Nodejs binding for crfsuite](https://github.com/vunb/node-crfsuite)
+* [fasttext - Nodejs binding for fasttext](https://github.com/vunb/node-fasttext)
+* [CRFSuite documentation](http://www.chokkan.org/software/crfsuite/)
+* [Facebook fastText](https://github.com/facebookresearch/fastText)
+
+Contributing
+============
+
+Pull requests and stars are highly welcome.
+
+For bugs and feature requests, please [create an issue](https://github.com/vntk/vntk-chatbot-framework/issues/new).
+
