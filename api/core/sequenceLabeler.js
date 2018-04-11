@@ -138,20 +138,26 @@ class SequenceLabeler {
             })
     }
 
-    predict(storyId, sentence) {
-        let tagger = new crfsuite.Tagger();
+    tag(storyId, sentence) {
         let modelFileName = path.resolve(this.options.modelFileDir, `${storyId}.model`);
-
         if (!fs.existsSync(modelFileName)) {
-            return [];
+            let tags = vntk.ner().tag(sentence)
+            let zipTokens = tags.map((tagged) => [tagged[0], tagged[1], tagged[3]])
+            return zipTokens
+        } else {
+            let tagger = new crfsuite.Tagger();
+            let posTags = vntk.posTag().tag(sentence);
+            let feats = posTags.map((token, i) => features.word2features(posTags, i, this.template))
+            tagger.open(modelFileName);
+            let nerTags = tagger.tag(feats)
+            let zipTokens = posTags.map((tagged, i) => [tagged[0], tagged[1], nerTags[i]])
+            return zipTokens
         }
+    }
 
-        let posTags = vntk.posTag().tag(sentence);
-        let feats = posTags.map((token, i) => features.word2features(posTags, i, this.template))
-        tagger.open(modelFileName);
-        let nerTags = tagger.tag(feats)
-        let zipTokens = posTags.map((tagged, i) => [tagged[0], nerTags[i]])
-        return this.extractEntities(zipTokens)
+    predict(storyId, sentence) {
+        var tokens = this.tag(storyId, sentence).map((tagged) => [tagged[0], tagged[2]])
+        return this.extractEntities(tokens)
     }
 
     extractEntities(taggedSentence) {
