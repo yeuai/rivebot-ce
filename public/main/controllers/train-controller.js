@@ -19,43 +19,10 @@ angular.module('app.main')
                 $scope.isPosLabeled = false;
                 $scope.sentences = "";
             }
-
-            // $scope.pos_tag = {
-            //     config: '',
-            //     doc: {
-            //         text: $scope.sentences,
-            //         entities: $scope.tokenLabel
-            //     }
-            // }
-
-            var tags = [
-                ["Nhật ký", "N", "B-NP"],
-                ["SEA", "Np", "B-NP"],
-                ["Games", "Np", "B-NP"],
-                ["ngày", "N", "B-NP"],
-                ["21/8", "M", "B-NP"],
-                [":", "CH", "O"],
-                ["Ánh", "Np", "B-NP"],
-                ["Viên", "Np", "I-NP"],
-                ["thắng", "V", "B-VP"],
-                ["giòn giã", "N", "B-NP"],
-                ["ở", "E", "B-PP"],
-                ["vòng", "N", "B-NP"],
-                ["loại", "N", "B-NP"],
-                [".", "CH", "O"]
-            ];
-            var tokens = _.map(tags, function (tag) {
-                return tag[0];
-            });
-            var text = tokens.join(" ");
-            var posTags = tags;
-            var posEntities = generateEntitiesFromTags(posTags);
+         
             $scope.pos_tag = {
-                "config": POSTagBratConfig,
-                "doc": {
-                    "text": text,
-                    "entities": posEntities
-                }
+                config: POSTagBratConfig,
+                doc: null
             };
 
             $scope.textSelected = function (text, start, end) {
