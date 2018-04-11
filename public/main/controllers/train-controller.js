@@ -66,7 +66,7 @@ angular.module('app.main')
                 var entityStart = $scope.entityRange[0];
                 var entityEnd = $scope.entityRange[1];
                 var entitySpan = false;
-                _.some($scope.pos_tag.doc.entities, (e) => {
+                var lastEntity = _.find($scope.pos_tag.doc.entities, (e) => {
                     let range = e[2][0];
                     if (range[0] <= entityStart && entityStart <= range[1] && entityEnd > range[1]) {
                         e[1] = 'B-' + label;
@@ -81,7 +81,7 @@ angular.module('app.main')
                         entitySpan = false;
                         return true;
                     } else if (entitySpan && entityEnd <= range[1]) {
-                        if (entityEnd !== range[0]) {
+                        if (entityEnd > range[0]) {
                             e[1] = 'I-' + label;
                         }
                         entitySpan = false;
@@ -89,6 +89,19 @@ angular.module('app.main')
                     }
                     // search next item
                     return false;
+                })
+
+                // check after tagging break like [b-label1, i-label2]
+                var checkLastEntityFound = false
+                _.find($scope.pos_tag.doc.entities, (e) => {
+                    if (lastEntity[0] === e[0]) {
+                        checkLastEntityFound = true
+                    } else if (checkLastEntityFound && /^I-/.test(e[1])) {
+                        e[1] = 'O';
+                    } else if (checkLastEntityFound === true) {
+                        // break search
+                        return true;
+                    }
                 })
             }
 
