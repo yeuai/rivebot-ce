@@ -55,12 +55,13 @@ angular.module('app.main')
 
             $scope.labelEntity = function () {
                 var entity = $scope.namedEntity;
-                var label = $scope.tokenLabel.toLowerCase();
+                var label = ($scope.tokenLabel || '').toLowerCase();
 
                 if (!entity && typeof entity !== 'string') {
                     return alert('Vui lòng chọn lại thực thể có tên!')
                 } else if (!label || /^\s+/.test(label)) {
-                    return alert('Vui lòng nhập tên cho thực thể!')
+                    // alert to user knows
+                    alert('Xóa tên thực thể!')
                 }
 
                 var listEntities = $scope.pos_tag.doc.entities;
@@ -70,20 +71,20 @@ angular.module('app.main')
                 var lastEntity = _.find(listEntities, (e) => {
                     let range = e[2][0];
                     if (range[0] <= entityStart && entityStart <= range[1] && entityEnd > range[1]) {
-                        e[1] = 'B-' + label;
+                        e[1] = label ? 'B-' + label : 'O';
                         entitySpan = true;
                         return false;
                     } else if (entitySpan && entityEnd >= range[1]) {
-                        e[1] = 'I-' + label;
+                        e[1] = label ? 'I-' + label : 'O';
                         entitySpan = true;
                         return false;
                     } else if (range[0] <= entityStart && entityEnd <= range[1]) {
-                        e[1] = 'B-' + label;
+                        e[1] = label ? 'B-' + label : 'O';
                         entitySpan = false;
                         return true;
                     } else if (entitySpan && entityEnd <= range[1]) {
                         if (entityEnd > range[0]) {
-                            e[1] = 'I-' + label;
+                            e[1] = label ? 'I-' + label : 'O';
                         }
                         entitySpan = false;
                         return true;
@@ -127,25 +128,29 @@ angular.module('app.main')
                     $http.get('/api/nlu/pos/' + text + '?storyId=' + $scope.story._id)
                         .then(function (res) {
                             var tags = res.data
-                            var tokens = tags.map((tag) => tag[0])
-                            var text = tokens.join(' ')
-                            var posEntities = generateEntitiesFromTags(tags)
-
-                            _.each(tags, (tag, i) => {
-                                if (tag[2] !== 'O') {
-                                    posEntities[i][1] = tag[2]
-                                }
-                            })
-
-                            $scope.posTags = tags
-                            $scope.posTagAndLabel = JSON.stringify(tags)
-                            $scope.isPosLabeled = true;
-
-                            $scope.pos_tag.doc = {
-                                text: text,
-                                entities: posEntities
-                            }
+                            $scope.updatePosTags(tags)
                         });
+                }
+            }
+
+            $scope.updatePosTags = function (tags) {
+                var tokens = tags.map((tag) => tag[0])
+                var text = tokens.join(' ')
+                var posEntities = generateEntitiesFromTags(tags)
+
+                _.each(tags, (tag, i) => {
+                    if (tag[2] !== 'O') {
+                        posEntities[i][1] = tag[2]
+                    }
+                })
+
+                $scope.posTags = tags
+                $scope.posTagAndLabel = JSON.stringify(tags)
+                $scope.isPosLabeled = true;
+
+                $scope.pos_tag.doc = {
+                    text: text,
+                    entities: posEntities
                 }
             }
 
@@ -173,6 +178,10 @@ angular.module('app.main')
                         $scope.story.labeledSentences.splice(index, 1);
                         console.log('Delete ok: ', res.data)
                     });
+            }
+
+            $scope.editSentence = function (story, label, index) {
+                $scope.updatePosTags(label.data)
             }
         }
     ]);
