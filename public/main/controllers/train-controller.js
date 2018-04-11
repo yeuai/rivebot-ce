@@ -19,7 +19,7 @@ angular.module('app.main')
                 $scope.isPosLabeled = false;
                 $scope.sentences = "";
             }
-         
+
             $scope.pos_tag = {
                 config: POSTagBratConfig,
                 doc: null
@@ -36,6 +36,7 @@ angular.module('app.main')
 
                 $scope.namedEntity = text;
                 $scope.tokenLabel = entity[1];
+                $scope.entityRange = [start, end];
                 angular.element('#tokenLabel').focus().select()
             }
 
@@ -48,6 +49,7 @@ angular.module('app.main')
 
                 $scope.namedEntity = selected;
                 $scope.tokenLabel = entity[1];
+                $scope.entityRange = entity[2][0];
                 angular.element('#tokenLabel').focus().select()
             }
 
@@ -55,36 +57,39 @@ angular.module('app.main')
                 var entity = $scope.namedEntity;
                 var label = $scope.tokenLabel.toLowerCase();
 
-                if (!entity && (!$scope.userInput || /^\s+/.test($scope.userInput))) {
+                if (!entity && typeof entity !== 'string') {
                     return alert('Vui lòng chọn lại thực thể có tên!')
+                } else if (!label || /^\s+/.test(label)) {
+                    return alert('Vui lòng nhập tên cho thực thể!')
                 }
 
-                var token1 = !$scope.userInput ? Promise.resolve({
-                    data: []
-                }) : $http.get('/api/nlu/tok/' + $scope.userInput)
-                var token2 = $http.get('/api/nlu/tok/' + entity)
-                Promise.all([token1, token2])
-                    .then(function ([res1, res2]) {
-                        var startedWords = res1.data
-                        var selectedWords = res2.data
-                        var startLen = startedWords.length
-
-                        if ((startLen < $scope.posTags.length && $scope.posTags[startLen][0] !== selectedWords[0]) && (startLen > 0 && $scope.posTags[startLen - 1][0] !== selectedWords[0])) {
-                            startLen -= 1
+                var entityStart = $scope.entityRange[0];
+                var entityEnd = $scope.entityRange[1];
+                var entitySpan = false;
+                _.some($scope.pos_tag.doc.entities, (e) => {
+                    let range = e[2][0];
+                    if (range[0] <= entityStart && entityStart <= range[1] && entityEnd > range[1]) {
+                        e[1] = 'B-' + label;
+                        entitySpan = true;
+                        return false;
+                    } else if (entitySpan && entityEnd >= range[1]) {
+                        e[1] = 'I-' + label;
+                        entitySpan = true;
+                        return false;
+                    } else if (range[0] <= entityStart && entityEnd <= range[1]) {
+                        e[1] = 'B-' + label;
+                        entitySpan = false;
+                        return true;
+                    } else if (entitySpan && entityEnd <= range[1]) {
+                        if (entityEnd !== range[0]) {
+                            e[1] = 'I-' + label;
                         }
-
-                        for (var i = 0; i < selectedWords.length; i++) {
-                            let bio = 'B-' + label;
-                            if (i > 0) {
-                                bio = 'I-' + label;
-                            }
-                            $scope.posTags[startLen + i][2] = bio;
-                        }
-                        // update display
-                        $timeout(function () {
-                            $scope.posTagAndLabel = JSON.stringify($scope.posTags)
-                        })
-                    });
+                        entitySpan = false;
+                        return true;
+                    }
+                    // search next item
+                    return false;
+                })
             }
 
             $scope.posTag = function () {
