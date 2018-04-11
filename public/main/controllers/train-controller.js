@@ -124,12 +124,18 @@ angular.module('app.main')
                         plain: true
                     })
                 } else {
-                    $http.get('/api/nlu/pos/' + text)
+                    $http.get('/api/nlu/pos/' + text + '?storyId=' + $scope.story._id)
                         .then(function (res) {
                             var tags = res.data
                             var tokens = tags.map((tag) => tag[0])
                             var text = tokens.join(' ')
                             var posEntities = generateEntitiesFromTags(tags)
+
+                            _.each(tags, (tag, i) => {
+                                if (tag[2] !== 'O') {
+                                    posEntities[i][1] = tag[2]
+                                }
+                            })
 
                             $scope.posTags = tags
                             $scope.posTagAndLabel = JSON.stringify(tags)

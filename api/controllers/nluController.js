@@ -135,7 +135,7 @@ router.get('/pos/:text', (req, res, next) => {
     if (storyId) {
         // use pre-trained model
         let pretrained_tags = sequenceLabeler.tag(storyId, text)
-        return res.json(tags)
+        return res.json(pretrained_tags)
     } else {
         let tags = tagger.tag(text).map((tokens) => [tokens[0], tokens[1], 'O'])
         res.json(tags)
