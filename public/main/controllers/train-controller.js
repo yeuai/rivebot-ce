@@ -36,7 +36,7 @@ angular.module('app.main')
 
                 $scope.namedEntity = text;
                 $scope.tokenLabel = entity[1];
-                angular.element('#tokenLabel').focus()
+                angular.element('#tokenLabel').focus().select()
             }
 
             $scope.labelClicked = function (spanId) {
@@ -48,31 +48,7 @@ angular.module('app.main')
 
                 $scope.namedEntity = selected;
                 $scope.tokenLabel = entity[1];
-                angular.element('#tokenLabel').focus()
-            }
-
-            $scope.mouseUp = function (event) {
-                var selected = util.getTextSelected()
-                if (selected.toString().length > 0) {
-                    var selectedText = selected.toString()
-                    var range = selected.getRangeAt(0).cloneRange()
-                    var editableEl = document.getElementById("sentences")
-                    range.collapse(true)
-                    range.setStart(editableEl, 0)
-
-                    $scope.namedEntity = selectedText;
-                    $scope.userInput = angular.element('<p>').append(range.cloneContents()).text();
-
-                    range = selected.getRangeAt(0);
-                    var selectionContents = range.extractContents();
-                    var span = document.createElement("span");
-                    span.appendChild(selectionContents);
-                    span.setAttribute("class", "Highlight");
-                    span.style.backgroundColor = "green";
-                    span.style.color = "white";
-                    range.insertNode(span);
-                    angular.element('#tokenLabel').focus()
-                }
+                angular.element('#tokenLabel').focus().select()
             }
 
             $scope.labelEntity = function () {
@@ -112,7 +88,7 @@ angular.module('app.main')
             }
 
             $scope.posTag = function () {
-                var text = angular.element('#sentences').text()
+                var text = $scope.sentences
                 if (!text) {
                     return ngDialog.openConfirm({
                         template: '\
