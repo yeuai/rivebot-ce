@@ -35,7 +35,7 @@ angular.module('app.main')
 
 
                 $scope.namedEntity = text;
-                $scope.tokenLabel = entity[1];
+                $scope.tokenLabel = entity[1].replace(/^[bi]-/i, '');
                 $scope.entityRange = [start, end];
                 angular.element('#tokenLabel').focus().select()
             }
@@ -48,7 +48,7 @@ angular.module('app.main')
                 var selected = $scope.pos_tag.doc.text.substring(entity[2][0][0], entity[2][0][1]);
 
                 $scope.namedEntity = selected;
-                $scope.tokenLabel = entity[1];
+                $scope.tokenLabel = entity[1].replace(/^[bi]-/i, '');
                 $scope.entityRange = entity[2][0];
                 angular.element('#tokenLabel').focus().select()
             }
@@ -63,10 +63,11 @@ angular.module('app.main')
                     return alert('Vui lòng nhập tên cho thực thể!')
                 }
 
+                var listEntities = $scope.pos_tag.doc.entities;
                 var entityStart = $scope.entityRange[0];
                 var entityEnd = $scope.entityRange[1];
                 var entitySpan = false;
-                var lastEntity = _.find($scope.pos_tag.doc.entities, (e) => {
+                var lastEntity = _.find(listEntities, (e) => {
                     let range = e[2][0];
                     if (range[0] <= entityStart && entityStart <= range[1] && entityEnd > range[1]) {
                         e[1] = 'B-' + label;
@@ -93,7 +94,7 @@ angular.module('app.main')
 
                 // check after tagging break like [b-label1, i-label2]
                 var checkLastEntityFound = false
-                _.find($scope.pos_tag.doc.entities, (e) => {
+                _.find(listEntities, (e) => {
                     if (lastEntity[0] === e[0]) {
                         checkLastEntityFound = true
                     } else if (checkLastEntityFound && /^I-/.test(e[1])) {
@@ -103,6 +104,11 @@ angular.module('app.main')
                         return true;
                     }
                 })
+
+                // Generate posTags with NER tags
+                _.each(listEntities, (e, i) => {
+                    $scope.posTags[i][2] = /^[bi]-/i.test(e[1]) ? e[1] : 'O';
+                });
             }
 
             $scope.posTag = function () {

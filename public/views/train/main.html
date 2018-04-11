@@ -43,12 +43,7 @@
             <button type="button" class="btn btn-primary" id="btnBuild" ng-click="buildModel(story._id)">Build Model</button>
             <button type="button" class="btn btn-primary" id="btnInsertLabeledSentence" ng-click="addToTestSet(story._id)">Add to Test Set</button>
         </div>
-        <div class="row">
-        </div>
-        <div class="span4" id="output">
-            <span ng-bind="posTagAndLabel">
-        </div>
-
+        <hr />
         <div class="row">
             <ol>
                 <li ng-repeat="label in story.labeledSentences track by $index">
