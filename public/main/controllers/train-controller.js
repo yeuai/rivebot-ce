@@ -60,12 +60,28 @@ angular.module('app.main')
 
             $scope.textSelected = function (text, start, end) {
                 console.log('textSelected: ', text, start, end);
+                var listEntities = $scope.pos_tag.doc.entities;
+                var entity = _.find(listEntities, (e) => {
+                    var range = e[2];
+                    return range[0][0] <= start && start <= range[0][1]
+                });
+
+
                 $scope.namedEntity = text;
+                $scope.tokenLabel = entity[1];
+                angular.element('#tokenLabel').focus()
             }
 
             $scope.labelClicked = function (spanId) {
                 console.log('labelClicked: ', spanId)
-                // $scope.tokenLabel = text;
+
+                var listEntities = $scope.pos_tag.doc.entities;
+                var entity = _.find(listEntities, (e) => e[0] === spanId);
+                var selected = $scope.pos_tag.doc.text.substring(entity[2][0][0], entity[2][0][1]);
+
+                $scope.namedEntity = selected;
+                $scope.tokenLabel = entity[1];
+                angular.element('#tokenLabel').focus()
             }
 
             $scope.mouseUp = function (event) {
@@ -143,14 +159,19 @@ angular.module('app.main')
                 } else {
                     $http.get('/api/nlu/pos/' + text)
                         .then(function (res) {
-                            var tokens = res.data
-                            $scope.posTags = tokens
-                            $scope.posTagAndLabel = JSON.stringify(tokens)
+                            var tags = res.data
+                            var tokens = tags.map((tag) => tag[0])
+                            var text = tokens.join(' ')
+                            var posEntities = generateEntitiesFromTags(tags)
+
+                            $scope.posTags = tags
+                            $scope.posTagAndLabel = JSON.stringify(tags)
                             $scope.isPosLabeled = true;
 
-                            var posEntities = generateEntitiesFromTags(tokens);
-                            $scope.pos_tag.doc.text = text;
-                            $scope.pos_tag.doc.entities = posEntities;
+                            $scope.pos_tag.doc = {
+                                text: text,
+                                entities: posEntities
+                            }
                         });
                 }
             }
