@@ -20,6 +20,54 @@ angular.module('app.main')
                 $scope.sentences = "";
             }
 
+            // $scope.pos_tag = {
+            //     config: '',
+            //     doc: {
+            //         text: $scope.sentences,
+            //         entities: $scope.tokenLabel
+            //     }
+            // }
+
+            var tags = [
+                ["Nhật ký", "N", "B-NP"],
+                ["SEA", "Np", "B-NP"],
+                ["Games", "Np", "B-NP"],
+                ["ngày", "N", "B-NP"],
+                ["21/8", "M", "B-NP"],
+                [":", "CH", "O"],
+                ["Ánh", "Np", "B-NP"],
+                ["Viên", "Np", "I-NP"],
+                ["thắng", "V", "B-VP"],
+                ["giòn giã", "N", "B-NP"],
+                ["ở", "E", "B-PP"],
+                ["vòng", "N", "B-NP"],
+                ["loại", "N", "B-NP"],
+                [".", "CH", "O"]
+            ];
+            var tokens = _.map(tags, function (tag) {
+                return tag[0];
+            });
+            var text = tokens.join(" ");
+            var posTags = tags;
+            var posEntities = generateEntitiesFromTags(posTags);
+            $scope.pos_tag = {
+                "config": POSTagBratConfig,
+                "doc": {
+                    "text": text,
+                    "entities": posEntities
+                }
+            };
+
+            $scope.textSelected = function (text, start, end) {
+                console.log('textSelected: ', text, start, end);
+                $scope.namedEntity = text;
+            }
+
+            $scope.labelClicked = function (spanId) {
+                console.log('labelClicked: ', spanId)
+                // $scope.tokenLabel = text;
+            }
+
             $scope.mouseUp = function (event) {
                 var selected = util.getTextSelected()
                 if (selected.toString().length > 0) {
@@ -52,7 +100,9 @@ angular.module('app.main')
                     return alert('Vui lòng chọn lại thực thể có tên!')
                 }
 
-                var token1 = !$scope.userInput ? Promise.resolve({data: []}) : $http.get('/api/nlu/tok/' + $scope.userInput)
+                var token1 = !$scope.userInput ? Promise.resolve({
+                    data: []
+                }) : $http.get('/api/nlu/tok/' + $scope.userInput)
                 var token2 = $http.get('/api/nlu/tok/' + entity)
                 Promise.all([token1, token2])
                     .then(function ([res1, res2]) {
@@ -97,16 +147,20 @@ angular.module('app.main')
                             $scope.posTags = tokens
                             $scope.posTagAndLabel = JSON.stringify(tokens)
                             $scope.isPosLabeled = true;
+
+                            var posEntities = generateEntitiesFromTags(tokens);
+                            $scope.pos_tag.doc.text = text;
+                            $scope.pos_tag.doc.entities = posEntities;
                         });
                 }
             }
 
             $scope.buildModel = function (storyId) {
                 $http.get('/api/nlu/train/' + storyId)
-                .then(function (res) {
-                    var modelPath = res.data
-                    alert('Build ok: ' + modelPath)
-                });
+                    .then(function (res) {
+                        var modelPath = res.data
+                        alert('Build ok: ' + modelPath)
+                    });
             }
 
             $scope.addToTestSet = function (storyId) {

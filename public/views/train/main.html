@@ -29,6 +29,9 @@
     </div>
     <div class="col-md-6">
         <div class="span4">
+            <text-annotation config="pos_tag.config" doc="pos_tag.doc" multilabel="true" text-selected="textSelected(text, start, end)" label-clicked="labelClicked(id)"></text-annotation>
+        </div>
+        <div class="span4">
             <label for="tokenLabel" style="color:#337ab7">Mark label:
                 <span ng-bind="namedEntity"></span>
             </label>
