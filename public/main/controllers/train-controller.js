@@ -20,66 +20,100 @@ angular.module('app.main')
                 $scope.sentences = "";
             }
 
-            $scope.mouseUp = function (event) {
-                var selected = util.getTextSelected()
-                if (selected.toString().length > 0) {
-                    var selectedText = selected.toString()
-                    var range = selected.getRangeAt(0).cloneRange()
-                    var editableEl = document.getElementById("sentences")
-                    range.collapse(true)
-                    range.setStart(editableEl, 0)
+            $scope.pos_tag = {
+                config: POSTagBratConfig,
+                doc: null
+            };
 
-                    $scope.namedEntity = selectedText;
-                    $scope.userInput = angular.element('<p>').append(range.cloneContents()).text();
+            $scope.textSelected = function (text, start, end) {
+                console.log('textSelected: ', text, start, end);
+                var listEntities = $scope.pos_tag.doc.entities;
+                var entity = _.find(listEntities, (e) => {
+                    var range = e[2];
+                    return range[0][0] <= start && start <= range[0][1]
+                });
 
-                    range = selected.getRangeAt(0);
-                    var selectionContents = range.extractContents();
-                    var span = document.createElement("span");
-                    span.appendChild(selectionContents);
-                    span.setAttribute("class", "Highlight");
-                    span.style.backgroundColor = "green";
-                    span.style.color = "white";
-                    range.insertNode(span);
-                    angular.element('#tokenLabel').focus()
-                }
+
+                $scope.namedEntity = text;
+                $scope.tokenLabel = entity[1].replace(/^[bi]-/i, '');
+                $scope.entityRange = [start, end];
+                angular.element('#tokenLabel').focus().select()
+            }
+
+            $scope.labelClicked = function (spanId) {
+                console.log('labelClicked: ', spanId)
+
+                var listEntities = $scope.pos_tag.doc.entities;
+                var entity = _.find(listEntities, (e) => e[0] === spanId);
+                var selected = $scope.pos_tag.doc.text.substring(entity[2][0][0], entity[2][0][1]);
+
+                $scope.namedEntity = selected;
+                $scope.tokenLabel = entity[1].replace(/^[bi]-/i, '');
+                $scope.entityRange = entity[2][0];
+                angular.element('#tokenLabel').focus().select()
             }
 
             $scope.labelEntity = function () {
                 var entity = $scope.namedEntity;
-                var label = $scope.tokenLabel.toLowerCase();
+                var label = ($scope.tokenLabel || '').toLowerCase();
 
-                if (!entity && (!$scope.userInput || /^\s+/.test($scope.userInput))) {
+                if (!entity && typeof entity !== 'string') {
                     return alert('Vui lòng chọn lại thực thể có tên!')
+                } else if (!label || /^\s+/.test(label)) {
+                    // alert to user knows
+                    alert('Xóa tên thực thể!')
                 }
 
-                var token1 = !$scope.userInput ? Promise.resolve({data: []}) : $http.get('/api/nlu/tok/' + $scope.userInput)
-                var token2 = $http.get('/api/nlu/tok/' + entity)
-                Promise.all([token1, token2])
-                    .then(function ([res1, res2]) {
-                        var startedWords = res1.data
-                        var selectedWords = res2.data
-                        var startLen = startedWords.length
-
-                        if ((startLen < $scope.posTags.length && $scope.posTags[startLen][0] !== selectedWords[0]) && (startLen > 0 && $scope.posTags[startLen - 1][0] !== selectedWords[0])) {
-                            startLen -= 1
+                var listEntities = $scope.pos_tag.doc.entities;
+                var entityStart = $scope.entityRange[0];
+                var entityEnd = $scope.entityRange[1];
+                var entitySpan = false;
+                var lastEntity = _.find(listEntities, (e) => {
+                    let range = e[2][0];
+                    if (range[0] <= entityStart && entityStart <= range[1] && entityEnd > range[1]) {
+                        e[1] = label ? 'B-' + label : 'O';
+                        entitySpan = true;
+                        return false;
+                    } else if (entitySpan && entityEnd >= range[1]) {
+                        e[1] = label ? 'I-' + label : 'O';
+                        entitySpan = true;
+                        return false;
+                    } else if (range[0] <= entityStart && entityEnd <= range[1]) {
+                        e[1] = label ? 'B-' + label : 'O';
+                        entitySpan = false;
+                        return true;
+                    } else if (entitySpan && entityEnd <= range[1]) {
+                        if (entityEnd > range[0]) {
+                            e[1] = label ? 'I-' + label : 'O';
                         }
+                        entitySpan = false;
+                        return true;
+                    }
+                    // search next item
+                    return false;
+                })
 
-                        for (var i = 0; i < selectedWords.length; i++) {
-                            let bio = 'B-' + label;
-                            if (i > 0) {
-                                bio = 'I-' + label;
-                            }
-                            $scope.posTags[startLen + i][2] = bio;
-                        }
-                        // update display
-                        $timeout(function () {
-                            $scope.posTagAndLabel = JSON.stringify($scope.posTags)
-                        })
-                    });
+                // check after tagging break like [b-label1, i-label2]
+                var checkLastEntityFound = false
+                _.find(listEntities, (e) => {
+                    if (lastEntity[0] === e[0]) {
+                        checkLastEntityFound = true
+                    } else if (checkLastEntityFound && /^I-/.test(e[1])) {
+                        e[1] = 'O';
+                    } else if (checkLastEntityFound === true) {
+                        // break search
+                        return true;
+                    }
+                })
+
+                // Generate posTags with NER tags
+                _.each(listEntities, (e, i) => {
+                    $scope.posTags[i][2] = /^[bi]-/i.test(e[1]) ? e[1] : 'O';
+                });
             }
 
             $scope.posTag = function () {
-                var text = angular.element('#sentences').text()
+                var text = $scope.sentences
                 if (!text) {
                     return ngDialog.openConfirm({
                         template: '\
@@ -91,22 +125,41 @@ angular.module('app.main')
                         plain: true
                     })
                 } else {
-                    $http.get('/api/nlu/pos/' + text)
+                    $http.get('/api/nlu/pos/' + text + '?storyId=' + $scope.story._id)
                         .then(function (res) {
-                            var tokens = res.data
-                            $scope.posTags = tokens
-                            $scope.posTagAndLabel = JSON.stringify(tokens)
-                            $scope.isPosLabeled = true;
+                            var tags = res.data
+                            $scope.updatePosTags(tags)
                         });
+                }
+            }
+
+            $scope.updatePosTags = function (tags) {
+                var tokens = tags.map((tag) => tag[0])
+                var text = tokens.join(' ')
+                var posEntities = generateEntitiesFromTags(tags)
+
+                _.each(tags, (tag, i) => {
+                    if (tag[2] !== 'O') {
+                        posEntities[i][1] = tag[2]
+                    }
+                })
+
+                $scope.posTags = tags
+                $scope.posTagAndLabel = JSON.stringify(tags)
+                $scope.isPosLabeled = true;
+
+                $scope.pos_tag.doc = {
+                    text: text,
+                    entities: posEntities
                 }
             }
 
             $scope.buildModel = function (storyId) {
                 $http.get('/api/nlu/train/' + storyId)
-                .then(function (res) {
-                    var modelPath = res.data
-                    alert('Build ok: ' + modelPath)
-                });
+                    .then(function (res) {
+                        var modelPath = res.data
+                        alert('Build ok: ' + modelPath)
+                    });
             }
 
             $scope.addToTestSet = function (storyId) {
@@ -125,6 +178,10 @@ angular.module('app.main')
                         $scope.story.labeledSentences.splice(index, 1);
                         console.log('Delete ok: ', res.data)
                     });
+            }
+
+            $scope.editSentence = function (story, label, index) {
+                $scope.updatePosTags(label.data)
             }
         }
     ]);

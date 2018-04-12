@@ -130,9 +130,16 @@ router.get('/train/:id', (req, res, next) => {
 
 router.get('/pos/:text', (req, res, next) => {
     let text = req.param('text')
-    let tags = tagger.tag(text).map((tokens) => [tokens[0], tokens[1], 'O'])
+    let storyId = req.param('storyId')
 
-    res.json(tags)
+    if (storyId) {
+        // use pre-trained model
+        let pretrained_tags = sequenceLabeler.tag(storyId, text)
+        return res.json(pretrained_tags)
+    } else {
+        let tags = tagger.tag(text).map((tokens) => [tokens[0], tokens[1], 'O'])
+        res.json(tags)
+    }
 })
 
 router.get('/tok/:text', (req, res, next) => {

@@ -50,7 +50,6 @@ p.flip {
     padding: 3px;
     height: 200px;
     font-size: 20px;
-    overflow-y: scroll;
 }
 
 #sentences::selection {

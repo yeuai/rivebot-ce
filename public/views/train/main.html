@@ -8,8 +8,7 @@
 <div class="row">
 
     <div class="col-md-6 train-area">
-        <div id="sentences" class="form-control" placeholder="Enter sample user input" contenteditable="true" ng-model="sentences"
-            ng-mouseup="mouseUp($event)"></div>
+        <textarea id="sentences" class="form-control" placeholder="Enter sample user input" ng-model="sentences" style="max-width: 100%"></textarea>
         <br>
         <div class="pull-left labels">
             <span id="action">
@@ -29,6 +28,9 @@
     </div>
     <div class="col-md-6">
         <div class="span4">
+            <text-annotation config="pos_tag.config" doc="pos_tag.doc" multilabel="true" text-selected="textSelected(text, start, end)" label-clicked="labelClicked(id)"></text-annotation>
+        </div>
+        <div class="span4">
             <label for="tokenLabel" style="color:#337ab7">Mark label:
                 <span ng-bind="namedEntity"></span>
             </label>
@@ -41,16 +43,12 @@
             <button type="button" class="btn btn-primary" id="btnBuild" ng-click="buildModel(story._id)">Build Model</button>
             <button type="button" class="btn btn-primary" id="btnInsertLabeledSentence" ng-click="addToTestSet(story._id)">Add to Test Set</button>
         </div>
-        <div class="row">
-        </div>
-        <div class="span4" id="output">
-            <span ng-bind="posTagAndLabel">
-        </div>
-
+        <hr />
         <div class="row">
             <ol>
                 <li ng-repeat="label in story.labeledSentences track by $index">
-                    <a ng-click="removeSentence(story._id, label._id, $index)" style="cursor: hand;">Delete</a>
+                    <a ng-click="removeSentence(story._id, label._id, $index)" style="cursor: hand;">Delete</a>|
+                    <a ng-click="editSentence(story, label, $index)" style="cursor: hand;">Edit</a>
                     <span ng-bind="label.data"></span>
                 </li>
             </ol>
