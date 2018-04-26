@@ -1,3 +1,4 @@
+<!--controller: storyController-->
 <div class="container">
     <div class="page-header">
         <div class="pull-left">
@@ -13,18 +14,43 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4 stories">
-            <div ng-if="stories.length > 0">
-                <div class="story" ng-repeat="story in stories track by $index">
-                    <h3 ng-bind="story.storyName">storyName</h3>
-                    <button type="button" class="btn btn-primary" id="btnEdit" ng-click="editStory(story)">Edit</button>
-                    <button type="button" class="btn btn-primary" ng-click="openTrainDialog(story)">Train</button>
-                    <button type="button" class="btn btn-primary" ng-click="removeStory(story._id, $index)">Delete</button>
-                    <button type="button" class="btn btn-primary" id="btnBuild">Build Model</button>
+        <div class="col-md-4">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <strong style="font-size: 20pt;">Intents</strong>
+                    <!-- Split button -->
+                    <div class="btn-group pull-right">
+                        <button type="button" class="btn btn-info btn-circle" data-toggle="tooltip" data-placement="bottom" title="Tạo mới intent">
+                            <i class="fa fa-magic"></i>
+                        </button>
+                        <button type="button" class="btn btn-info btn-circle" data-toggle="tooltip" data-placement="bottom" title="Quản lý nhiều hội thoại (dialog flows)">
+                            <i class="fa fa-code-fork"></i>
+                        </button>
+                        <button type="button" class="btn btn-info btn-circle dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-placement="bottom" title="Cài đặt hội thoại">
+                            <i class="fa fa-gear"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href ng-click="exportStory()">Export database</a></li>
+                            <li><a href ng-click="importStory()">Import database</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Build all models</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="stories" ng-if="stories.length === 0">
-                <center>No stories found!</center>
+                <div class="panel-body stories">
+                    <div ng-if="stories.length > 0">
+                        <div class="story" ng-repeat="story in stories track by $index">
+                            <h4 ng-bind="story.storyName">storyName</h4>
+                            <button type="button" class="btn btn-xs btn-primary" id="btnEdit" ng-click="editStory(story)">Edit</button>
+                            <button type="button" class="btn btn-xs btn-primary" ng-click="openTrainDialog(story)">Train</button>
+                            <button type="button" class="btn btn-xs btn-success" ng-click="buildModel(story)">Build Model</button>
+                            <button type="button" class="btn btn-xs btn-danger" ng-click="removeStory(story._id, $index)">Delete</button>
+                        </div>
+                    </div>
+                    <div class="stories" ng-if="stories.length === 0">
+                        <center>No stories found!</center>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-8 stories">

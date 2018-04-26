@@ -155,11 +155,15 @@ angular.module('app.main')
             }
 
             $scope.buildModel = function (storyId) {
-                $http.get('/api/nlu/train/' + storyId)
+                $http.post('/api/nlu/train/' + storyId)
                     .then(function (res) {
                         var modelPath = res.data
                         alert('Build ok: ' + modelPath)
-                    });
+                    })
+                    .catch((err) => {
+                        console.error('ERROR:', err)
+                        alert('ERROR: ' + err)
+                    })
             }
 
             $scope.addToTestSet = function (storyId) {
