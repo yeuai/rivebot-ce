@@ -11,6 +11,8 @@ var upload = multer()
  * Export database
  */
 router.get('/exports', (req, res, next) => {
+    if(!config.get('DB_EXPORT')) return res.status(400).send('Not allow!');
+
     storyModel.find()
         .lean()
         .then((result) => {
@@ -25,6 +27,8 @@ router.get('/exports', (req, res, next) => {
  * Restore database
  */
 router.post('/imports', upload.single('datafile'), (req, res, next) => {
+    if(!config.get('DB_IMPORT')) return res.status(400).send('Not allow!');
+
     var data = req.file.buffer.toString('utf-8')
     // clear all data.
     storyModel.remove({})

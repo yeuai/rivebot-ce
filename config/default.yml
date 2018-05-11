@@ -12,3 +12,6 @@ modelConfig:
   TRAIN_DATA_NAME: intent.txt
   DEFAULT_FALLBACK_INTENT_NAME: fallback
   DEFAULT_WELCOME_INTENT_NAME: init_conversation
+
+DB_IMPORT: true
+DB_EXPORT: true
