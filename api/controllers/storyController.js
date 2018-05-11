@@ -1,8 +1,46 @@
 'use strict';
 
 const config = require('config')
+const multer = require('multer')
 const router = require('express').Router()
 const storyModel = require('../models/story')
+
+var upload = multer()
+
+/**
+ * Export database
+ */
+router.get('/exports', (req, res, next) => {
+    storyModel.find()
+        .lean()
+        .then((result) => {
+            res
+                .attachment('yeu-ai.json')
+                .type('json')
+                .send(result)
+        })
+})
+
+/**
+ * Restore database
+ */
+router.post('/imports', upload.single('datafile'), (req, res, next) => {
+    var data = req.file.buffer.toString('utf-8')
+    // clear all data.
+    storyModel.remove({})
+        .then(() => {
+            // parse and import new data.
+            var stories = JSON.parse(data)
+            return storyModel.create(stories)
+        })
+        .then(() => {
+            res.send('ok');
+        })
+        .catch((err) => {
+            res.status(500)
+                .send(err)
+        })
+})
 
 /**
  * Get all stories

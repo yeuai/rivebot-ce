@@ -108,5 +108,47 @@ angular.module('app.main')
 
             }
 
+            $scope.exportStory = function () {
+                $http.post('/api/stories/exports')
+                    .then(function (res) {
+                        var modelPath = res.data
+                        console.log('Download ok: ', res.data)
+                    })
+                    .catch((err) => {
+                        console.error('ERROR:', err)
+                        alert('ERROR: ' + err)
+                    })
+            }
+
+            $scope.importStory = function () {
+                ngDialog.open({
+                    template: '/views/stories/import.html',
+                    className: 'ngdialog-theme-default',
+                    appendClassName: 'ngdialog-vntk-chatbot',
+                    controller: ['$scope', function ($scope) {
+                        // must select file
+                        $scope.fileInputChange = function () {
+                            $scope.$apply(function () {
+                                $scope.fileSelected = true
+                            })
+                        }
+
+                        $scope.uploadFile = function () {
+                            var fd = new FormData();
+                            fd.append('datafile', $scope.dataFile);
+                            
+                            $http.post('/api/stories/imports', fd, {
+                                transformRequest: angular.identity,
+                                headers: {'Content-Type': undefined}
+                            })
+                            .then(function (res) {
+                                var data = res.data
+                                alert('ok!')
+                            })
+                        }
+
+                    }]
+                });
+            }
         }
     ]);
