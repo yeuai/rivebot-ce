@@ -10,7 +10,9 @@ var inputParameters = new Schema({
 });
 
 var labeledSentences = new Schema({
-    data: Array
+    data: Array,
+    text: String,
+    label: String
 });
 
 var StorySchema = new Schema({

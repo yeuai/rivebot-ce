@@ -93,6 +93,9 @@ router.delete('/:storyId', (req, res, next) => {
         })
 })
 
+/**
+ * Thêm mới một mẫu học đã được gán nhãn!
+ */
 router.put('/:storyId/labeled', (req, res, next) => {
     let storyId = req.param('storyId')
     if (!storyId) return res.status(400).end('missing story')
@@ -103,7 +106,8 @@ router.put('/:storyId/labeled', (req, res, next) => {
         }, {
             $push: {
                 labeledSentences: {
-                    data: req.body
+                    data: req.body,
+                    text: req.body.map((v) => v[0]).join(' ')
                 }
             }
         }, {

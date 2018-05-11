@@ -70,8 +70,9 @@ angular.module('app.main')
             $scope.buildModel = function (story) {
                 $http.post('/api/nlu/train/' + story._id)
                     .then(function (res) {
+                        var modelPath = res.data
                         console.log('Build model ok: ', res.data)
-                        alert("Sucess");
+                        alert('Build ok: ' + modelPath)
                     })
                     .catch((err) => {
                         console.error('ERROR:', err)

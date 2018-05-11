@@ -114,7 +114,7 @@ function buildNonCompleteResponse(story, req) {
     }
 }
 
-router.get('/train/:id', (req, res, next) => {
+router.post('/train/:id', (req, res, next) => {
     let storyId = req.param('id')
     intentClassifier.train()
         .then(result => {
