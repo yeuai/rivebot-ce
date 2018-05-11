@@ -30,7 +30,7 @@
                             <i class="fa fa-gear"></i>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href ng-click="exportStory()">Export database</a></li>
+                            <li><a href="/api/stories/exports" target="_blank">Export database</a></li>
                             <li><a href ng-click="importStory()">Import database</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="#">Build all models</a></li>
@@ -47,7 +47,7 @@
                             <button type="button" class="btn btn-xs btn-danger" ng-click="removeStory(story._id, $index)">Delete</button>
                         </div>
                     </div>
-                    <div class="stories" ng-if="stories.length === 0">
+                    <div ng-if="stories.length === 0">
                         <center>No stories found!</center>
                     </div>
                 </div>
