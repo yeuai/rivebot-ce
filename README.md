@@ -1,5 +1,5 @@
-vntk-chatbot-framework
-======================
+Rivebot Community Edition
+=========================
 
 An AI chatbot framework using VNTK and written in Nodejs.
 
@@ -22,8 +22,8 @@ If you need to backup an old version before restore, then:
 
 2. Clone repository & Install dependencies
 
-> git clone https://github.com/vntk/vntk-chatbot-framework.git  
-> cd vntk-chatbot-framework  
+> git clone https://github.com/yeuai/rivebot-ce.git  
+> cd rivebot-ce  
 > npm install  
 
 3. Run chatbot and open on your browser
@@ -38,8 +38,8 @@ Finally navigate to [http://localhost:3000/](http://localhost:3000/) to see proj
 * Compose: [Install Docker Compose](https://docs.docker.com/compose/install/)
 
 ```bash
-> git clone https://github.com/vntk/vntk-chatbot-framework.git  
-> cd vntk-chatbot-framework  
+> git clone https://github.com/yeuai/rivebot-ce.git  
+> cd rivebot-ce  
 
 # build & start chatbot as a service
 > docker-compose build  
