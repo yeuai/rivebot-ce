@@ -115,7 +115,7 @@ function buildNonCompleteResponse(story, req) {
 }
 
 class NLUController {
-    'post /train/:id' (req, res) {
+    'train/:id' (req, res) {
         let storyId = req.param('id')
         intentClassifier.train()
             .then(result => {
@@ -130,7 +130,7 @@ class NLUController {
     }
 
 
-    '/pos/:text' (req, res) {
+    'pos/:text' (req, res) {
         let text = req.param('text')
         let storyId = req.param('storyId')
 
@@ -144,13 +144,13 @@ class NLUController {
         }
     }
 
-    '/tok/:text' (req, res) {
+    'tok/:text' (req, res) {
         let text = req.param('text')
         let tokens = wordSent.tag(text);
         res.json(tokens)
     }
 
-    'all /chat/:text' (req, res) {
+    'chat/:text' (req, res) {
         let input = req.param('text')
         let complete = req.param('complete')
         let context = req.param('context', {})

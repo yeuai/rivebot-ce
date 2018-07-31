@@ -9,7 +9,7 @@ var upload = multer();
 /**
  * Export database
  */
-router.get('/exports', (req, res, next) => {
+router.get('/api/story/exports', (req, res, next) => {
     if(!config.get('DB_EXPORT')) return res.status(400).send('Not allow!');
 
     var storyModel = req.kites.db.story;
@@ -27,7 +27,7 @@ router.get('/exports', (req, res, next) => {
 /**
  * Restore database
  */
-router.post('/imports', upload.single('datafile'), (req, res, next) => {
+router.post('/api/story/imports', upload.single('datafile'), (req, res, next) => {
     if(!config.get('DB_IMPORT')) return res.status(400).send('Not allow!');
 
     var data = req.file.buffer.toString('utf-8');
@@ -52,8 +52,8 @@ router.post('/imports', upload.single('datafile'), (req, res, next) => {
 /**
  * Route user home page
  */
-router.get('*', (req, res) => {
-    res.sendFile(path.join(req.kites.appDirectory, 'public/index.html'));
-})
+// router.get('*', (req, res) => {
+//     res.sendFile(path.join(req.kites.appDirectory, 'public/index.html'));
+// })
 
 module.exports = router;

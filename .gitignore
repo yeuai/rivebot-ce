@@ -62,3 +62,7 @@ model_files
 package-lock.json
 development.yml
 production.yml
+
+# kites.js
+dev.config.json
+prod.config.json

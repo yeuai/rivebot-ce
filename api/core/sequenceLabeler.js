@@ -3,12 +3,12 @@ const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const config = require('config');
-const crfsuite = require('crfsuite');
 const vntk = require('vntk');
 const iobParser = require('./iob');
 const features = require('./features');
 const storyModel = require('../models/story');
 
+const crfsuite = vntk.crfsuite();
 
 /**
  * Trainer engine for @vntk/tagger
