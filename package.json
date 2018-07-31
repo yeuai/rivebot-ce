@@ -4,7 +4,6 @@
   "description": "A vntk-based chatbot framework with Natural Language Understanding and Artificial Intelligence",
   "main": "index.js",
   "scripts": {
-    "setup": "node setup",
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -31,12 +30,7 @@
     "@kites/express": "^0.1.10",
     "@vntk/dictionary": "^1.0.0",
     "async": "^2.6.0",
-    "body-parser": "^1.18.2",
     "config": "^1.30.0",
-    "cors": "^2.8.4",
-    "crfsuite": "^0.9.3",
-    "ejs": "^2.5.9",
-    "express": "^4.16.3",
     "handlebars": "^4.0.11",
     "js-yaml": "^3.11.0",
     "kites": "^1.0.1",
