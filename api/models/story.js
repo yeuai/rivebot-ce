@@ -45,4 +45,11 @@ var StorySchema = new Schema({
 
 var StoryModel = mongoose.model("Story", StorySchema);
 
-module.exports = StoryModel;
+/**
+ * Custom model definition
+ */
+module.exports = {
+    define: function () {
+        return StoryModel;
+    }
+};

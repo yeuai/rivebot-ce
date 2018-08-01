@@ -1,9 +1,10 @@
 'use strict';
 
-const storyModel = require('../models/story')
-
 class StoryController {
 
+    constructor() {
+        this.storyModel = this.kites.db.story;
+    }
 
     /**
      * Get all stories
@@ -12,7 +13,7 @@ class StoryController {
      */
     findAll(req, res) {
         // get all stories
-        storyModel.find({})
+        this.storyModel.find({})
             .lean()
             .then((result) => {
                 res.json(result)
@@ -32,7 +33,7 @@ class StoryController {
             return res.status(400).end('Missing intentName')
         }
         story.intentName = story.intentName.replace(/\s+/g, '_')
-        storyModel.create(story)
+        this.storyModel.create(story)
             .then((result) => {
                 res.json(result)
             })
@@ -47,7 +48,7 @@ class StoryController {
         if (!storyId) return res.status(400).end('missing story')
 
         // find record details
-        storyModel.find({
+        this.storyModel.find({
                 _id: storyId
             })
             .lean()
@@ -64,7 +65,7 @@ class StoryController {
         if (!storyId) return res.status(400).end('missing story')
 
         // find record details
-        storyModel.update({
+        this.storyModel.update({
                 _id: storyId
             }, {
                 $set: req.body
@@ -84,7 +85,7 @@ class StoryController {
 
         // find record details
         // TODO: system intent can not remove (init_conversation, fallback, cancel)
-        storyModel.findByIdAndRemove(storyId)
+        this.storyModel.findByIdAndRemove(storyId)
             .lean()
             .then((result) => {
                 res.json(result)
@@ -102,7 +103,7 @@ class StoryController {
         if (!storyId) return res.status(400).end('missing story')
 
         // find record details
-        storyModel.findOneAndUpdate({
+        this.storyModel.findOneAndUpdate({
                 _id: storyId
             }, {
                 $push: {
@@ -130,7 +131,7 @@ class StoryController {
         if (!storyId || !labeledId || labeledId === 'undefined') return res.status(400).end('missing story or labeled id')
 
         // find record details
-        storyModel.update({
+        this.storyModel.update({
                 _id: storyId
             }, {
                 $pull: {

@@ -5,7 +5,6 @@ const vntk = require('vntk')
 const handlebars = require('handlebars')
 const IntentClassifier = require('../core/intentClassifier')
 const SequenceLabeler = require('../core/sequenceLabeler')
-const storyModel = require('../models/story');
 
 const intentClassifier = new IntentClassifier()
 const sequenceLabeler = new SequenceLabeler()
@@ -96,7 +95,7 @@ function buildNonCompleteResponse(story, req) {
         missingParameters.splice(currentNodeIndex, 1)
 
         if (missingParameters.length > 0) {
-            return storyModel.findById(storyId)
+            return this.kites.db.story.findById(storyId)
                 .lean()
                 .then((story) => {
                     result['complete'] = false
@@ -156,7 +155,7 @@ class NLUController {
         let context = req.param('context', {})
 
         if (input === DEFAULT_WELCOME_INTENT_NAME) {
-            return storyModel.findOne({
+            return this.kites.db.story.findOne({
                     intentName: DEFAULT_WELCOME_INTENT_NAME
                 })
                 .lean()
@@ -182,7 +181,7 @@ class NLUController {
         intentClassifier.predict(input)
             .then((intent) => {
                 if (!intent) intent = DEFAULT_FALLBACK_INTENT_NAME
-                return storyModel.findOne({
+                return this.kites.db.story.findOne({
                     intentName: intent
                 }).lean()
             })
