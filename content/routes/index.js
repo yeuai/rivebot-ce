@@ -1,10 +1,9 @@
 'use strict';
-const path = require('path');
 const multer = require('multer');
 const config = require('config');
 const router = require('express').Router();
 
-var upload = multer();
+const upload = multer();
 
 /**
  * Export database
@@ -48,12 +47,5 @@ router.post('/api/story/imports', upload.single('datafile'), (req, res, next) =>
                 .send(err)
         })
 })
-
-/**
- * Route user home page
- */
-// router.get('*', (req, res) => {
-//     res.sendFile(path.join(req.kites.appDirectory, 'public/index.html'));
-// })
 
 module.exports = router;
