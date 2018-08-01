@@ -3,6 +3,9 @@ Rivebot Community Edition
 
 An AI chatbot framework using VNTK and written in Nodejs.
 
+[![Join the chat at https://gitter.im/yeuai/rivebot-ce](https://badges.gitter.im/yeuai/rivebot-ce.svg)](https://gitter.im/yeuai/rivebot-ce)
+[![npm version](https://img.shields.io/npm/v/kites.svg?style=flat)](https://www.npmjs.com/package/kites)
+
 > This is a part of project [yeu.ai](https://github.com/yeuai). An open platform for experiment and training Vietnamese chatbot!
 
 Installation
@@ -22,9 +25,9 @@ If you need to backup an old version before restore, then:
 
 2. Clone repository & Install dependencies
 
-> git clone https://github.com/yeuai/rivebot-ce.git  
-> cd rivebot-ce  
-> npm install  
+> git clone https://github.com/yeuai/rivebot-ce.git
+> cd rivebot-ce
+> npm install
 
 3. Run chatbot and open on your browser
 
@@ -38,12 +41,12 @@ Finally navigate to [http://localhost:3000/](http://localhost:3000/) to see proj
 * Compose: [Install Docker Compose](https://docs.docker.com/compose/install/)
 
 ```bash
-> git clone https://github.com/yeuai/rivebot-ce.git  
-> cd rivebot-ce  
+> git clone https://github.com/yeuai/rivebot-ce.git
+> cd rivebot-ce
 
 # build & start chatbot as a service
-> docker-compose build  
-> docker-compose up -d  
+> docker-compose build
+> docker-compose up -d
 
 # import database
 > docker exec -it mongodb bash
