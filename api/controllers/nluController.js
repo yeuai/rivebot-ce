@@ -1,12 +1,10 @@
 'use strict';
 
 const config = require('config')
-const router = require('express').Router()
 const vntk = require('vntk')
 const handlebars = require('handlebars')
 const IntentClassifier = require('../core/intentClassifier')
 const SequenceLabeler = require('../core/sequenceLabeler')
-const storyModel = require('../models/story');
 
 const intentClassifier = new IntentClassifier()
 const sequenceLabeler = new SequenceLabeler()
@@ -23,7 +21,8 @@ function buildCompleteResponse(story, req) {
     let parameters = []
     if (!story) {
         throw new Error('Not found story: ' + input)
-    } if (story.parameters) {
+    }
+    if (story.parameters) {
         parameters = story.parameters
     }
 
@@ -96,7 +95,7 @@ function buildNonCompleteResponse(story, req) {
         missingParameters.splice(currentNodeIndex, 1)
 
         if (missingParameters.length > 0) {
-            return storyModel.findById(storyId)
+            return this.kites.db.story.findById(storyId)
                 .lean()
                 .then((story) => {
                     result['complete'] = false
@@ -114,101 +113,109 @@ function buildNonCompleteResponse(story, req) {
     }
 }
 
-router.post('/train/:id', (req, res, next) => {
-    let storyId = req.param('id')
-    intentClassifier.train()
-        .then(result => {
-            return sequenceLabeler.trainStory(storyId);
-        })
-        .then((result) => {
-            res.json(result)
-        })
-        .catch(err => {
-            res.status(500).end(err)
-        })
-})
-
-router.get('/pos/:text', (req, res, next) => {
-    let text = req.param('text')
-    let storyId = req.param('storyId')
-
-    if (storyId) {
-        // use pre-trained model
-        let pretrained_tags = sequenceLabeler.tag(storyId, text)
-        return res.json(pretrained_tags)
-    } else {
-        let tags = tagger.tag(text).map((tokens) => [tokens[0], tokens[1], 'O'])
-        res.json(tags)
-    }
-})
-
-router.get('/tok/:text', (req, res, next) => {
-    let text = req.param('text')
-    let tokens = wordSent.tag(text);
-    res.json(tokens)
-})
-
-router.all('/chat/:text', (req, res, next) => {
-    let input = req.param('text')
-    let complete = req.param('complete')
-    let context = req.param('context', {})
-
-    if (input === DEFAULT_WELCOME_INTENT_NAME) {
-        return storyModel.findOne({
-                intentName: DEFAULT_WELCOME_INTENT_NAME
+class NLUController {
+    'train/:id' (req, res) {
+        let storyId = req.param('id')
+        intentClassifier.train()
+            .then(result => {
+                return sequenceLabeler.trainStory(storyId);
             })
-            .lean()
+            .then((result) => {
+                res.json(result)
+            })
+            .catch(err => {
+                res.status(500).end(err)
+            })
+    }
+
+
+    'pos/:text' (req, res) {
+        let text = req.param('text')
+        let storyId = req.param('storyId')
+
+        if (storyId) {
+            // use pre-trained model
+            let pretrained_tags = sequenceLabeler.tag(storyId, text)
+            return res.json(pretrained_tags)
+        } else {
+            let tags = tagger.tag(text).map((tokens) => [tokens[0], tokens[1], 'O'])
+            res.json(tags)
+        }
+    }
+
+    'tok/:text' (req, res) {
+        let text = req.param('text')
+        let tokens = wordSent.tag(text);
+        res.json(tokens)
+    }
+
+    'chat/:text' (req, res) {
+        let input = req.param('text')
+        let complete = req.param('complete')
+        let context = req.param('context', {})
+
+        if (input === DEFAULT_WELCOME_INTENT_NAME) {
+            return this.kites.db.story.findOne({
+                    intentName: DEFAULT_WELCOME_INTENT_NAME
+                })
+                .lean()
+                .then((story) => {
+
+                    if (!story) {
+                        return res.notFound('Story: ' + input);
+                    }
+
+                    let result = req.body;
+                    result['input'] = input
+                    result['complete'] = true
+                    result['intent'] = {
+                        name: story.storyName,
+                        storyId: story._id.toString()
+                    }
+                    result['speechResponse'] = story.speechResponse
+                    res.json(result)
+                })
+        }
+
+
+        intentClassifier.predict(input)
+            .then((intent) => {
+                if (!intent) intent = DEFAULT_FALLBACK_INTENT_NAME
+                return this.kites.db.story.findOne({
+                    intentName: intent
+                }).lean()
+            })
             .then((story) => {
-                let result = req.body;
-                result['input'] = input
-                result['complete'] = true
-                result['intent'] = {
-                    name: story.storyName,
-                    storyId: story._id.toString()
+                var responseResult;
+                if (complete === false) {
+                    responseResult = buildNonCompleteResponse(story, req)
+                } else {
+                    responseResult = buildCompleteResponse(story, req)
                 }
-                result['speechResponse'] = story.speechResponse
-                res.json(result)
+                return Promise.all([story, responseResult])
+            })
+            .then(([story, result]) => {
+
+                if (result['complete']) {
+                    if (story.apiTrigger) {
+                        // call api
+                    }
+                    var template = handlebars.compile(story.speechResponse)
+                    result['speechResponse'] = template(result.extractedParameters)
+                }
+
+                if (!result) {
+                    res.json('unknow')
+                } else {
+                    res.json(result)
+                }
+            })
+            .catch((err) => {
+                console.error('ERROR: ', err)
+                res.status(500).json(err)
             })
     }
 
+}
 
-    intentClassifier.predict(input)
-        .then((intent) => {
-            if (!intent) intent = DEFAULT_FALLBACK_INTENT_NAME
-            return storyModel.findOne({
-                intentName: intent
-            }).lean()
-        })
-        .then((story) => {
-            var responseResult;
-            if (complete === false) {
-                responseResult = buildNonCompleteResponse(story, req)
-            } else {
-                responseResult = buildCompleteResponse(story, req)
-            }
-            return Promise.all([story, responseResult])
-        })
-        .then(([story, result]) => {
-
-            if (result['complete']) {
-                if (story.apiTrigger) {
-                    // call api
-                }
-                var template = handlebars.compile(story.speechResponse)
-                result['speechResponse'] = template(result.extractedParameters)
-            }
-
-            if (!result) {
-                res.json('unknow')
-            } else {
-                res.json(result)
-            }
-        })
-        .catch((err) => {
-            console.error('ERROR: ', err)
-            res.status(500).json(err)
-        })
-})
-
-
-module.exports = router;
+module.exports = NLUController;

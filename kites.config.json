@@ -1,0 +1,40 @@
+{
+    "extensionsLocationCache": true,
+    "logger": {
+        "console": {
+            "transport": "console",
+            "level": "info"
+        }
+    },
+    "extensions": null,
+    "kites-api": {
+        "useBaseModel" : false,
+        "connection": "mongodb",
+        "dataSource": [{
+            "name": "memory",
+            "driver": "memory",
+            "active": true
+        }, {
+            "name": "mongodb",
+            "driver": "mongoose",
+            "host": "localhost",
+            "port": "27017",
+            "username": "",
+            "password": "",
+            "database": "rivebot",
+            "active": true,
+            "rs": false
+        }]
+    },
+    "express": {
+        "static": "./public",
+        "httpPort": 3000,
+        "poweredBy": "Yeu.AI",
+        "views": {
+            "ext": "ejs",
+            "engine": "ejs",
+            "renderer": "renderFile",
+            "path": "content/views"
+        }
+    }
+}

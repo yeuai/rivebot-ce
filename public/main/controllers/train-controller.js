@@ -168,7 +168,7 @@ angular.module('app.main')
 
             $scope.addToTestSet = function (storyId) {
                 var labeledSentence = $scope.posTags
-                $http.put('/api/stories/' + storyId + '/labeled', labeledSentence)
+                $http.put('/api/story/' + storyId + '/labeled', labeledSentence)
                     .then(function (res) {
                         var result = res.data
                         console.log('Result: ', result)
@@ -177,7 +177,7 @@ angular.module('app.main')
             }
 
             $scope.removeSentence = function (storyId, sentenceId, index) {
-                $http.delete('/api/stories/' + storyId + '/labeled/' + sentenceId)
+                $http.delete('/api/story/' + storyId + '/labeled/' + sentenceId)
                     .then(function (res) {
                         $scope.story.labeledSentences.splice(index, 1);
                         console.log('Delete ok: ', res.data)

@@ -16,7 +16,7 @@ angular.module('app.main')
             $scope.story = {}
 
             var loadStories = $scope.loadStories = function () {
-                $http.get('/api/stories')
+                $http.get('/api/story')
                     .then(function (res) {
                         $scope.stories = res.data;
                     });
@@ -24,8 +24,8 @@ angular.module('app.main')
 
             $scope.removeStory = (storyId, index) => {
                 if (!storyId) return false;
-                
-                $http.delete('/api/stories/' + storyId)
+
+                $http.delete('/api/story/' + storyId)
                     .then(function (res) {
                         $scope.story = {}
                         $scope.stories.splice(index, 1)
@@ -46,14 +46,14 @@ angular.module('app.main')
 
             $scope.saveStory = function (story) {
                 if (!story._id) {
-                    $http.post('/api/stories', story)
+                    $http.post('/api/story', story)
                         .then(function (res) {
                             var data = res.data
                             story._id = data._id
                             $scope.stories.push(data);
                         });
                 } else {
-                    $http.put('/api/stories/' + story._id, story)
+                    $http.put('/api/story/' + story._id, story)
                         .then(function (res) {
                             Object.assign(story, res.data);
                         });
@@ -109,7 +109,7 @@ angular.module('app.main')
             }
 
             $scope.exportStory = function () {
-                $http.post('/api/stories/exports')
+                $http.post('/api/story/exports')
                     .then(function (res) {
                         var modelPath = res.data
                         console.log('Download ok: ', res.data)
@@ -136,8 +136,8 @@ angular.module('app.main')
                         $scope.uploadFile = function () {
                             var fd = new FormData();
                             fd.append('datafile', $scope.dataFile);
-                            
-                            $http.post('/api/stories/imports', fd, {
+
+                            $http.post('/api/story/imports', fd, {
                                 transformRequest: angular.identity,
                                 headers: {'Content-Type': undefined}
                             })
