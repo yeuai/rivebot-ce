@@ -1,16 +1,16 @@
 {
-  "name": "@vntk/chatbot",
-  "version": "0.2.0",
-  "description": "A vntk-based chatbot framework with Natural Language Understanding and Artificial Intelligence",
+  "name": "@yeuai/rivebot-ce",
+  "version": "0.2.1",
+  "description": "Rivebot Community Edition - A vntk-based chatbot framework with Natural Language Understanding and Artificial Intelligence",
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vntk/vntk-chatbot-framework.git"
+    "url": "git+https://github.com/yeuai/rivebot-ce.git"
   },
   "keywords": [
     "ai-chatbot-framework",
@@ -22,11 +22,12 @@
   "author": "vunb",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vntk/vntk-chatbot-framework/issues"
+    "url": "https://github.com/yeuai/rivebot-ce/issues"
   },
-  "homepage": "https://github.com/vntk/vntk-chatbot-framework#readme",
+  "homepage": "https://kites.nodejs.vn/",
   "dependencies": {
-    "@kites/api": "^0.2.7",
+    "@kites/api": "^0.2.9",
+    "@kites/engine": "^0.1.5",
     "@kites/express": "^0.1.10",
     "@vntk/dictionary": "^1.0.0",
     "async": "^2.6.1",
@@ -41,6 +42,11 @@
     "vntk": "^1.4.1"
   },
   "devDependencies": {
-    "nodemon": "^1.17.3"
+    "chai": "~4.1.2",
+    "mocha": "~5.2.0",
+    "mockgoose": "~7.3.5",
+    "nodemon": "~1.17.3",
+    "supertest": "^3.1.0",
+    "https-proxy-agent": "^2.2.1"
   }
 }
