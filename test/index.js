@@ -76,7 +76,7 @@ describe('Rivebot CE API', function () {
                 input: 'init_conversation',
                 intent: {},
                 speechResponse: '',
-                to: 'coco@yeu.ai',
+                to: 'rivebot@yeu.ai',
             })
             .end(function (err, res) {
                 console.log(err, res.body);

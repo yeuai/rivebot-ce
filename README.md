@@ -79,5 +79,5 @@ Contributing
 
 Pull requests and stars are highly welcome.
 
-For bugs and feature requests, please [create an issue](https://github.com/vntk/vntk-chatbot-framework/issues/new).
+For bugs and feature requests, please [create an issue](https://github.com/yeuai/rivebot-ce/issues/new).
 
