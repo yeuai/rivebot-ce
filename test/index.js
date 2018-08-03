@@ -1,18 +1,10 @@
 const path = require('path');
 const should = require('chai').should();
 const expect = require('chai').expect;
-const mongoose = require('mongoose');
 const mockgoose = require('./mockgoose');
 
 const kites = require('kites');
 const request = require('supertest');
-
-/**
- * Define a model
- */
-const Cat = mongoose.model('Cat', {
-    name: String
-});
 
 var app;
 
@@ -25,6 +17,7 @@ describe('Rivebot CE API', function () {
                 loadConfig: true,
                 discover: true
             })
+            .use(require('../content/extensions/configRoutes'))
             .use((kites) => {
                 // barrier which prevents kites auto create connection
                 kites.on('datasource:connect', () => {
@@ -33,11 +26,26 @@ describe('Rivebot CE API', function () {
             })
             .init()
             .then(function (kites) {
-                app = kites.express.app
-
+                app = kites.express.app;
                 kites.logger.info('Rivebot Server is Ready!!!');
                 return kites;
-            })
+            });
+        await new Promise((resolve) => {
+            var datafile = path.resolve(__dirname, '../dump/exports/story.default.json');
+            console.log('Datafile: ' + datafile);
+            // init database
+            request(app)
+                .post('/api/story/imports')
+                .attach('datafile', datafile)
+                .end(function (err, res) {
+                    console.log(err, res.statusCode, res.text);
+                    expect(res.statusCode).to.equal(200);
+                    expect(res.text).to.equal('ok');
+                    resolve();
+                });
+        }).then(() => {
+            console.log('Init db ok!')
+        });
     });
 
     after(async () => {
@@ -45,39 +53,6 @@ describe('Rivebot CE API', function () {
         await mockgoose.teardown();
         // exit kites
         process.exit(0);
-    });
-
-    it("should create a cat foo", function (done) {
-        Cat.create({
-            name: "foo"
-        }, function (err, cat) {
-            should.not.exist(err);
-            should.exist(cat);
-            cat.should.be.an('object');
-            done(err);
-        });
-    });
-
-    it("should find cat foo", function (done) {
-        Cat.findOne({
-            name: "foo"
-        }, function (err, cat) {
-            should.not.exist(err);
-            should.exist(cat);
-            cat.should.be.an('object');
-            done(err);
-        });
-    });
-
-    it("should remove cat foo", function (done) {
-        Cat.remove({
-            name: "foo"
-        }, function (err, cat) {
-            should.not.exist(err);
-            should.exist(cat);
-            cat.should.be.an('object');
-            done(err);
-        });
     });
 
     it('ping api server', (done) => {
