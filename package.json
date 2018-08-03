@@ -1,7 +1,7 @@
 {
   "name": "@yeuai/rivebot-ce",
-  "version": "0.2.0",
-  "description": "A vntk-based chatbot framework with Natural Language Understanding and Artificial Intelligence",
+  "version": "0.2.1",
+  "description": "Rivebot Community Edition - A vntk-based chatbot framework with Natural Language Understanding and Artificial Intelligence",
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vntk/vntk-chatbot-framework.git"
+    "url": "git+https://github.com/yeuai/rivebot-ce.git"
   },
   "keywords": [
     "ai-chatbot-framework",
@@ -22,9 +22,9 @@
   "author": "vunb",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vntk/vntk-chatbot-framework/issues"
+    "url": "https://github.com/yeuai/rivebot-ce/issues"
   },
-  "homepage": "https://github.com/vntk/vntk-chatbot-framework#readme",
+  "homepage": "https://kites.nodejs.vn/",
   "dependencies": {
     "@kites/api": "^0.2.9",
     "@kites/engine": "^0.1.5",
