@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/vntk/vntk-chatbot-framework#readme",
   "dependencies": {
-    "@kites/api": "^0.2.7",
+    "@kites/api": "^0.2.8",
     "@kites/express": "^0.1.10",
     "@vntk/dictionary": "^1.0.0",
     "async": "^2.6.1",
