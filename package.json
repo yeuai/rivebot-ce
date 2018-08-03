@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -41,6 +41,9 @@
     "vntk": "^1.4.1"
   },
   "devDependencies": {
-    "nodemon": "^1.17.3"
+    "chai": "~4.1.2",
+    "mocha": "~5.2.0",
+    "mockgoose": "~7.3.5",
+    "nodemon": "~1.17.3"
   }
 }
