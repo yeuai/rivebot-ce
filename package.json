@@ -47,6 +47,6 @@
     "mockgoose": "~7.3.5",
     "nodemon": "~1.17.3",
     "supertest": "^3.1.0",
-    "https-proxy-agent ": "^2.2.1"
+    "https-proxy-agent": "^2.2.1"
   }
 }
