@@ -5,6 +5,7 @@ An AI chatbot framework using VNTK and written in Nodejs.
 
 [![Join the chat at https://gitter.im/yeuai/rivebot-ce](https://badges.gitter.im/yeuai/rivebot-ce.svg)](https://gitter.im/yeuai/rivebot-ce)
 [![npm version](https://img.shields.io/npm/v/kites.svg?style=flat)](https://www.npmjs.com/package/kites)
+[![Travis](https://travis-ci.org/yeuai/rivebot-ce.svg?branch=stable)](https://travis-ci.org/yeuai/rivebot-ce)
 
 > This is a part of project [yeu.ai](https://github.com/yeuai). An open platform for experiment and training Vietnamese chatbot!
 
