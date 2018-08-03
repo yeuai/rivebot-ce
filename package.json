@@ -1,5 +1,5 @@
 {
-  "name": "@vntk/chatbot",
+  "name": "@yeuai/rivebot-ce",
   "version": "0.2.0",
   "description": "A vntk-based chatbot framework with Natural Language Understanding and Artificial Intelligence",
   "main": "index.js",
@@ -26,7 +26,8 @@
   },
   "homepage": "https://github.com/vntk/vntk-chatbot-framework#readme",
   "dependencies": {
-    "@kites/api": "^0.2.8",
+    "@kites/api": "^0.2.9",
+    "@kites/engine": "^0.1.5",
     "@kites/express": "^0.1.10",
     "@vntk/dictionary": "^1.0.0",
     "async": "^2.6.1",
@@ -44,6 +45,7 @@
     "chai": "~4.1.2",
     "mocha": "~5.2.0",
     "mockgoose": "~7.3.5",
-    "nodemon": "~1.17.3"
+    "nodemon": "~1.17.3",
+    "supertest": "^3.1.0"
   }
 }
