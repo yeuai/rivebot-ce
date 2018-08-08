@@ -43,9 +43,9 @@ class IntentClassifier {
                     lr: 0.075,
                     epoch: 1000
                 })
-                .then((res) => {
-                    console.log('model info after training:', res)
-                    resolve([trainFeatures, trainLabels])
+                .then((result) => {
+                    console.log('model info after training:', result);
+                    resolve(result);
                 })
                 .catch((err) => {
                     console.error('sentenceClassifer train error:', err);

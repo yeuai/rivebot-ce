@@ -7,6 +7,7 @@ class NLUService {
         // make sure kites is ready
         kites.ready(() => {
             this.logger.info('NLU Service is ready!');
+            this.nerService = kites.sv.ner;
         });
     }
 
@@ -42,8 +43,8 @@ class NLUService {
         let extractedParameters = [];
         let missingParameters = [];
         if (parameters.length > 0) {
-            extractedParameters = sequenceLabeler.predict(storyId, input);
-            this.kites.info('sequenceLabeler predict: ', extractedParameters);
+            extractedParameters = this.nerService.predict(storyId, input);
+            this.logger.info('nerService predict: ', extractedParameters);
 
             // check required parameters
             result['parameters'] = parameters.map((p) => {

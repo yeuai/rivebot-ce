@@ -46,7 +46,7 @@ class StoryController {
     }
 
     read(req, res) {
-        let storyId = req.param('storyId')
+        let storyId = req.param('id')
         if (!storyId) return res.status(400).end('missing story')
 
         // find record details
@@ -63,7 +63,7 @@ class StoryController {
     }
 
     update(req, res) {
-        let storyId = req.param('storyId')
+        let storyId = req.param('id')
         if (!storyId) return res.status(400).end('missing story')
 
         // find record details
@@ -82,7 +82,7 @@ class StoryController {
     }
 
     delete(req, res) {
-        let storyId = req.param('storyId')
+        let storyId = req.param('id')
         if (!storyId) return res.status(400).end('missing story')
 
         // find record details

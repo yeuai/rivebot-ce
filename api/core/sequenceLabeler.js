@@ -104,7 +104,7 @@ class SequenceLabeler {
         console.log('Training with info: ', this.options);
     }
 
-    trainStory(story) {
+    trainStory(story, storyId) {
         let trainSentences = _.map(story.labeledSentences, (item) => item.data)
         _.each(trainSentences, (sent, index) => {
             console.log(`Feeding trainer, sent: `, index, sent);

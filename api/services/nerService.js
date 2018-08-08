@@ -21,12 +21,16 @@ class NerService {
             .lean()
             .then((story) => {
                 if (!story) return Promise.reject('not found story: ' + storyId);
-                return this.sequenceLabeler.trainStory(story);
+                return this.sequenceLabeler.trainStory(story, storyId);
             });
     }
 
     tag(storyId, sentence) {
         return this.sequenceLabeler.tag(storyId, sentence);
+    }
+
+    predict(storyId, sentence) {
+        return this.sequenceLabeler.predict(storyId, sentence);
     }
 }
 

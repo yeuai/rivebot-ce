@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const IntentClassifier = require('../core/intentClassifier');
 
 /**
@@ -14,7 +15,10 @@ class IntentService {
         })
     }
 
-
+    /**
+     * Lấy toàn bộ dữ liệu huấn luyện
+     * TODO: Filter data by domain
+     */
     getData() {
         return new Promise((resolve, reject) => {
                 this.storyModel.find({})
@@ -44,6 +48,10 @@ class IntentService {
             })
     }
 
+    /**
+     * Huấn luyện dữ liệu, tạo bộ phân lớp
+     * Output là đường dẫn tới file model
+     */
     train() {
         return this.getData()
             .then(([trainFeatures, trainLabels]) => {
@@ -51,16 +59,13 @@ class IntentService {
             });
     }
 
+    /**
+     * Nhận dạng ý định của người dùng
+     * Mặc định lấy 3 instance cho việc xử lý đoạn chat ngắn
+     * @param {String} text
+     */
     predict(text) {
-        return this.intentClassifier.predict(text, 3)
-            .then((res) => {
-                console.log('sentenceClassifer predict: ', res)
-                if (res.length > 0) {
-                    return res[0].label.replace(/^__label__/, '')
-                } else {
-                    return false
-                }
-            })
+        return this.intentClassifier.predict(text);
     }
 }
 
