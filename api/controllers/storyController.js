@@ -2,8 +2,10 @@
 
 class StoryController {
 
-    constructor() {
-        this.storyModel = this.kites.db.story;
+    constructor(kites) {
+        kites.ready(() => {
+            this.storyModel = this.kites.db.story;
+        })
     }
 
     /**
