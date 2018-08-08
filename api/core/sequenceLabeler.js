@@ -23,10 +23,10 @@ class SequenceLabeler {
                 c2: 1e-3, // coefficient for L2 penalty
                 max_iterations: 300,
                 // include transitions that are possible, but not observed
-                feature_possible_transitions: 1,
-                modelFileDir: config.get('modelConfig.MODELS_DIR')
+                feature_possible_transitions: 1
             }, opt);
 
+            this.options.modelFileDir = config.get('modelConfig.MODELS_DIR');
 
             this.trainer = new crfsuite.Trainer();
 
@@ -104,38 +104,32 @@ class SequenceLabeler {
         console.log('Training with info: ', this.options);
     }
 
-    trainStory(storyId) {
-        return storyModel.findById(storyId)
-            .select('labeledSentences')
-            .lean()
-            .then((story) => {
-                if (!story) return Promise.reject('not found story: ' + storyId)
-                let trainSentences = _.map(story.labeledSentences, (item) => item.data)
-                _.each(trainSentences, (sent, index) => {
-                    console.log(`Feeding trainer, sent: `, index, sent);
-                    let X_train = this.transform(sent);
-                    let y_train = features.sent2labels(sent, 2);
-                    this.trainer.append(X_train, y_train);
-                })
+    trainStory(story) {
+        let trainSentences = _.map(story.labeledSentences, (item) => item.data)
+        _.each(trainSentences, (sent, index) => {
+            console.log(`Feeding trainer, sent: `, index, sent);
+            let X_train = this.transform(sent);
+            let y_train = features.sent2labels(sent, 2);
+            this.trainer.append(X_train, y_train);
+        })
 
-                let model_filename = path.resolve(path.join(process.cwd(), `./model_files/${storyId}.model`))
-                let iobOutput = path.resolve(path.join(process.cwd(), `./model_files/${storyId}.conll`))
-                console.log(`
-                Start training ...
-                ------------------
-                > Trainset: ${iobOutput}
-                > Output: ${model_filename}
-                `);
+        let model_filename = path.resolve(path.join(process.cwd(), `./model_files/${storyId}.model`))
+        let iobOutput = path.resolve(path.join(process.cwd(), `./model_files/${storyId}.conll`))
+        console.log(`
+        Start training ...
+        ------------------
+        > Trainset: ${iobOutput}
+        > Output: ${model_filename}
+        `);
 
-                // saving iob for testing
-                iobParser.saveFile(trainSentences, iobOutput)
-                this.trainer.train(model_filename);
-                console.log('Training done!, saved model to', model_filename);
+        // saving iob for testing
+        iobParser.saveFile(trainSentences, iobOutput)
+        this.trainer.train(model_filename);
+        console.log('Training done!, saved model to', model_filename);
 
-                // write training info to text
-                console.log('Training with info: ', this.options);
-                return model_filename
-            })
+        // write training info to text
+        console.log('Training with info: ', this.options);
+        return Promise.resolve(model_filename);
     }
 
     tag(storyId, sentence) {
