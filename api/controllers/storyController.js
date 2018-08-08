@@ -2,8 +2,10 @@
 
 class StoryController {
 
-    constructor() {
-        this.storyModel = this.kites.db.story;
+    constructor(kites) {
+        kites.ready(() => {
+            this.storyModel = this.kites.db.story;
+        })
     }
 
     /**
@@ -44,7 +46,7 @@ class StoryController {
     }
 
     read(req, res) {
-        let storyId = req.param('storyId')
+        let storyId = req.param('id')
         if (!storyId) return res.status(400).end('missing story')
 
         // find record details
@@ -61,7 +63,7 @@ class StoryController {
     }
 
     update(req, res) {
-        let storyId = req.param('storyId')
+        let storyId = req.param('id')
         if (!storyId) return res.status(400).end('missing story')
 
         // find record details
@@ -80,7 +82,7 @@ class StoryController {
     }
 
     delete(req, res) {
-        let storyId = req.param('storyId')
+        let storyId = req.param('id')
         if (!storyId) return res.status(400).end('missing story')
 
         // find record details

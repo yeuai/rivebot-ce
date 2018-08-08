@@ -3,122 +3,33 @@
 const config = require('config')
 const vntk = require('vntk')
 const handlebars = require('handlebars')
-const IntentClassifier = require('../core/intentClassifier')
-const SequenceLabeler = require('../core/sequenceLabeler')
 
-const intentClassifier = new IntentClassifier()
-const sequenceLabeler = new SequenceLabeler()
 const tagger = vntk.posTag()
-const wordSent = vntk.wordSent()
+const wordSent = vntk.wordTokenizer()
 
 // load config name
 const DEFAULT_WELCOME_INTENT_NAME = config.get('modelConfig.DEFAULT_WELCOME_INTENT_NAME')
 const DEFAULT_FALLBACK_INTENT_NAME = config.get('modelConfig.DEFAULT_FALLBACK_INTENT_NAME')
 
-function buildCompleteResponse(story, req) {
-    let input = req.param('input')
-    let result = req.body
-    let parameters = []
-    if (!story) {
-        throw new Error('Not found story: ' + input)
-    }
-    if (story.parameters) {
-        parameters = story.parameters
-    }
-
-    // check fulfill is complete
-    result['missingParameters'] = []
-    result['extractedParameters'] = {}
-    result['parameters'] = []
-    result['input'] = input;
-    // result['complete'] = false
-
-    let storyId = story._id.toString()
-    result['intent'] = {
-        name: story.intentName,
-        storyId: storyId,
-    }
-    let extractedParameters = []
-    let missingParameters = []
-    if (parameters.length > 0) {
-        extractedParameters = sequenceLabeler.predict(storyId, input);
-        console.log('sequenceLabeler predict: ', extractedParameters)
-
-        // check required parameters
-        result['parameters'] = parameters.map((p) => {
-            if (p.required && typeof extractedParameters[p.name] == 'undefined') {
-                missingParameters.push(p)
-            }
-
-            return {
-                name: p.name,
-                type: p.type,
-                required: p.required
-            }
-        })
-
-        result['extractedParameters'] = extractedParameters
-        result['missingParameters'] = missingParameters.map((p) => p.name)
-
-        if (missingParameters.length > 0) {
-            result['complete'] = false
-            result['currentNode'] = missingParameters[0].name
-            result['speechResponse'] = missingParameters[0].prompt
-        } else {
-            result['complete'] = true
-            result['parameters'] = extractedParameters
-        }
-    } else {
-        result['complete'] = true
-    }
-    return Promise.resolve(result)
-}
-
-function buildNonCompleteResponse(story, req) {
-    let result = req.body
-
-    if (story.intentName === 'cancel') {
-        result['currentNode'] = ''
-        result['missingParameters'] = []
-        result['parameters'] = {}
-        result['intent'] = {}
-        result['complete'] = true
-        return Promise.resolve(result)
-    } else {
-        let storyId = req.param('intent').storyId
-        let currentNode = req.param('currentNode')
-        let extractedParameters = req.param('extractedParameters', {})
-        let missingParameters = req.param('missingParameters', [])
-        let currentNodeIndex = missingParameters.indexOf(currentNode)
-
-        extractedParameters[currentNode] = req.param('input')
-        missingParameters.splice(currentNodeIndex, 1)
-
-        if (missingParameters.length > 0) {
-            return this.kites.db.story.findById(storyId)
-                .lean()
-                .then((story) => {
-                    result['complete'] = false
-                    let missingParameter = missingParameters[0]
-                    currentNode = story.parameters.filter((p) => p.name === missingParameter)[0]
-                    result['currentNode'] = currentNode.name
-                    result['speechResponse'] = currentNode.prompt
-                    return result
-                })
-        } else {
-            result['complete'] = true
-            result['parameters'] = extractedParameters
-            return Promise.resolve(result)
-        }
-    }
-}
-
+/**
+ * NLU Controller
+ */
 class NLUController {
+
+    constructor(kites) {
+        // ensure kites is ready
+        kites.ready(() => {
+            this.nerService = this.kites.sv.ner;
+            this.nluService = this.kites.sv.nlu;
+            this.intentService = this.kites.sv.intent;
+        })
+    }
+
     'train/:id' (req, res) {
         let storyId = req.param('id')
-        intentClassifier.train()
+        this.intentService.train()
             .then(result => {
-                return sequenceLabeler.trainStory(storyId);
+                return this.nerService.trainStory(storyId);
             })
             .then((result) => {
                 res.json(result)
@@ -135,7 +46,7 @@ class NLUController {
 
         if (storyId) {
             // use pre-trained model
-            let pretrained_tags = sequenceLabeler.tag(storyId, text)
+            let pretrained_tags = this.nerService.tag(storyId, text)
             return res.json(pretrained_tags)
         } else {
             let tags = tagger.tag(text).map((tokens) => [tokens[0], tokens[1], 'O'])
@@ -178,7 +89,7 @@ class NLUController {
         }
 
 
-        intentClassifier.predict(input)
+        this.intentService.predict(input)
             .then((intent) => {
                 if (!intent) intent = DEFAULT_FALLBACK_INTENT_NAME
                 return this.kites.db.story.findOne({
@@ -187,10 +98,11 @@ class NLUController {
             })
             .then((story) => {
                 var responseResult;
+                // var nluService = this.kites.sv.nlu;
                 if (complete === false) {
-                    responseResult = buildNonCompleteResponse(story, req)
+                    responseResult = this.nluService.buildNonCompleteResponse(story, req)
                 } else {
-                    responseResult = buildCompleteResponse(story, req)
+                    responseResult = this.nluService.buildCompleteResponse(story, req)
                 }
                 return Promise.all([story, responseResult])
             })
