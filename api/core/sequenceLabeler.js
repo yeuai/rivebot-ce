@@ -6,7 +6,6 @@ const config = require('config');
 const vntk = require('vntk');
 const iobParser = require('./iob');
 const features = require('./features');
-const storyModel = require('../models/story');
 
 const crfsuite = vntk.crfsuite();
 
