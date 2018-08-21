@@ -1,11 +1,7 @@
 'use strict';
 
 const config = require('config')
-const vntk = require('vntk')
 const handlebars = require('handlebars')
-
-const tagger = vntk.posTag()
-const wordSent = vntk.wordTokenizer()
 
 // load config name
 const DEFAULT_WELCOME_INTENT_NAME = config.get('modelConfig.DEFAULT_WELCOME_INTENT_NAME')
@@ -37,27 +33,6 @@ class NLUController {
             .catch(err => {
                 res.status(500).end(err)
             })
-    }
-
-
-    'pos/:text' (req, res) {
-        let text = req.param('text')
-        let storyId = req.param('storyId')
-
-        if (storyId) {
-            // use pre-trained model
-            let pretrained_tags = this.nerService.tag(storyId, text)
-            return res.json(pretrained_tags)
-        } else {
-            let tags = tagger.tag(text).map((tokens) => [tokens[0], tokens[1], 'O'])
-            res.json(tags)
-        }
-    }
-
-    'tok/:text' (req, res) {
-        let text = req.param('text')
-        let tokens = wordSent.tag(text);
-        res.json(tokens)
     }
 
     'chat/:text' (req, res) {
