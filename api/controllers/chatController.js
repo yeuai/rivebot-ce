@@ -1,5 +1,8 @@
 'use strict';
-
+/**
+ * Controller điều khiển các tương tác với dữ liệu lịch sử chat
+ * Sử dụng kỹ thuật Await/Async để tối giản các lệnh lập trình
+ */
 class ChatController {
 
     constructor(kites) {
@@ -56,6 +59,7 @@ class ChatController {
         if (!id) return res.badRequest('missing story')
 
         // find record details
+        // cập nhật toàn bộ nội dung chat theo id
         let result = await this.chatModel.update({
             _id: id
         }, {
