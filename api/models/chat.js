@@ -2,6 +2,9 @@ var mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
 
+/**
+ * Phôi thiết kế dữ liệu lịch sử chat
+ */
 var ChatSchema = new Schema({
     from: String,   // bot name, user name or user id
     botId: String,
