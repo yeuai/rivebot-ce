@@ -21,6 +21,11 @@ class NLUController {
         })
     }
 
+    /**
+     * Huấn luyện dữ liệu theo kịch bản được thiết kế bởi Rivebot
+     * @param {*} req
+     * @param {*} res
+     */
     'train/:id' (req, res) {
         let storyId = req.param('id')
         this.intentService.train()
@@ -35,6 +40,12 @@ class NLUController {
             })
     }
 
+    /**
+     * Hàm lý luận dựa vào dữ kiện kịch bản và ý định của khách hàng
+     * Trả về một đoạn văn bản mà khách hàng mong muốn nhận được câu trả lời
+     * @param {*} req
+     * @param {*} res
+     */
     'chat/:text' (req, res) {
         let input = req.param('text')
         let complete = req.param('complete')

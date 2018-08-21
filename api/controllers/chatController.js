@@ -13,87 +13,71 @@ class ChatController {
      * TODO: filter by bot id
      * TODO: Pagination
      */
-    findAll(req, res) {
+    async findAll(req, res) {
         // get all stories
-        this.chatModel.find({})
-            .lean()
-            .then((result) => {
-                res.ok(result)
-            })
-            .catch(err => {
-                res.nok(err)
-            })
+        let result = await this.chatModel.find({});
+        res.ok(result);
     }
 
     /**
      * Create new a story
      */
-    create(req, res) {
+    async create(req, res) {
         let chat = req.body
         if (!chat || typeof chat.text !== 'string') {
             return res.badRequest('Missing chat content: text');
         }
 
-        this.storyModel.create(chat)
-            .then((result) => {
-                res.ok(result)
-            })
-            .catch((err) => {
-                console.error('err:', err)
-                res.nok(err)
-            })
+        let result = await this.storyModel.create(chat);
+        res.ok(result);
     }
 
-    read(req, res) {
+    /**
+     * Lấy chi tiết một bản ghi lịch sử chat
+     * @param {*} req
+     * @param {*} res
+     */
+    async read(req, res) {
         let id = req.param('id')
         if (!id) return res.badRequest('missing story')
 
         // find record details
-        this.chatModel.find({
-                _id: id
-            })
-            .lean()
-            .then((result) => {
-                res.ok(result)
-            })
-            .catch(err => {
-                res.nok(err)
-            })
+        let result = await this.chatModel.findById(id);
+        res.ok(result);
     }
 
-    update(req, res) {
+    /**
+     * Hàm cập nhật nội dung chat theo id
+     * @param {*} req
+     * @param {*} res
+     */
+    async update(req, res) {
         let id = req.param('id')
         if (!id) return res.badRequest('missing story')
 
         // find record details
-        this.chatModel.update({
-                _id: id
-            }, {
-                $set: req.body
-            })
-            .lean()
-            .then((result) => {
-                res.ok(result)
-            })
-            .catch(err => {
-                res.nok(err)
-            })
+        let result = await this.chatModel.update({
+            _id: id
+        }, {
+            $set: req.body
+        });
+
+        res.ok(result)
     }
 
-    delete(req, res) {
+    /**
+     * Hàm xóa nội dung 1 bản ghi lịch sử chat
+     * @param {*} req
+     * @param {*} res
+     */
+    async delete(req, res) {
         let id = req.param('id')
         if (!id) return res.badRequest('missing chat id')
 
         // find record details
         // TODO: system intent can not remove (init_conversation, fallback, cancel)
-        this.chatModel.findByIdAndRemove(id)
-            .lean()
-            .then((result) => {
-                res.ok(result)
-            })
-            .catch(err => {
-                res.nok(err)
-            })
+        let result = await this.chatModel.findByIdAndRemove(id);
+        res.ok(result)
     }
 
 }
