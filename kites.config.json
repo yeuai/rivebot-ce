@@ -7,7 +7,7 @@
         }
     },
     "extensions": null,
-    "kites-api": {
+    "api": {
         "useBaseModel" : false,
         "connection": "mongodb",
         "dataSource": [{

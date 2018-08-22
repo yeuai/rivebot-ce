@@ -125,7 +125,7 @@ angular.module('app.main')
                         plain: true
                     })
                 } else {
-                    $http.get('/api/nlu/pos/' + text + '?storyId=' + $scope.story._id)
+                    $http.get('/api/nlp/pos/' + text + '?storyId=' + $scope.story._id)
                         .then(function (res) {
                             var tags = res.data
                             $scope.updatePosTags(tags)

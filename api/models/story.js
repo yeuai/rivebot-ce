@@ -15,6 +15,10 @@ var labeledSentences = new Schema({
     label: String
 });
 
+/**
+ * Phôi thiết kế kịch bản nói chuyện với người dùng
+ * TODO: Rename Story to `Script`?
+ */
 var StorySchema = new Schema({
     storyName: String,
     intentName: {
