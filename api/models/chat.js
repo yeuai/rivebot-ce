@@ -9,6 +9,8 @@ var ChatSchema = new Schema({
     from: String,   // bot name, user name or user id
     botId: String,
     text: String,
+    intent: String,
+    tags: Array,
     dateTime: Date
 }, {
     timestamps: true,
