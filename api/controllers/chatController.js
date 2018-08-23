@@ -23,7 +23,7 @@ class ChatController {
     }
 
     /**
-     * Create new a story
+     * Create new a chat log
      */
     async create(req, res) {
         let chat = req.body
@@ -31,7 +31,7 @@ class ChatController {
             return res.badRequest('Missing chat content: text');
         }
 
-        let result = await this.storyModel.create(chat);
+        let result = await this.chatModel.create(chat);
         res.ok(result);
     }
 
@@ -42,7 +42,7 @@ class ChatController {
      */
     async read(req, res) {
         let id = req.param('id')
-        if (!id) return res.badRequest('missing story')
+        if (!id) return res.badRequest('missing chat id')
 
         // find record details
         let result = await this.chatModel.findById(id);
@@ -56,7 +56,7 @@ class ChatController {
      */
     async update(req, res) {
         let id = req.param('id')
-        if (!id) return res.badRequest('missing story')
+        if (!id) return res.badRequest('missing chat id')
 
         // find record details
         // cập nhật toàn bộ nội dung chat theo id
