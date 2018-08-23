@@ -25,7 +25,7 @@ class ChatController {
         let intent_req = req.param('intent')
         let ner_req = req.param('ner')
         let PAGE = req.param('page')
-
+        let query = {}
         if (!PAGE){
             PAGE = 0 
         } else {
@@ -40,23 +40,17 @@ class ChatController {
 
         let OFFSET = PAGE * LIMIT
         
-        if (intent_req && !ner_req){
+        if (intent_req){
+            query.intent = intent_req
 
-            let result = await this.chatModel.find({ intent: intent_req});
-            res.ok(result);
-        } else if(ner_req && !intent_req){
-
-            let result = await this.chatModel.find( {tags : {"$in": [ner_req]}});
-            res.ok(result);
-        } else if (intent_req && ner_req ){
-
-            let result = await this.chatModel.find({ intent: intent_req, tags : {"$in": [ner_req]}});
-            res.ok(result);
-        } else{
-            let result = await this.chatModel.find({}).skip(OFFSET).limit(LIMIT);
-            res.ok(result);
-            
         }
+        if(ner_req){
+            query.tags = {"$in": [ner_req]}
+
+        }
+
+        let result = await this.chatModel.find(query).skip(OFFSET).limit(LIMIT);
+        return res.ok(result);
     }
 
     /**
