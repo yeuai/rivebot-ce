@@ -13,99 +13,79 @@ class StoryController {
      * TODO: filter by bot id
      * TODO: Pagination
      */
-    findAll(req, res) {
+    async findAll(req, res) {
         // get all stories
-        this.storyModel.find({})
-            .lean()
-            .then((result) => {
-                res.json(result)
-            })
-            .catch(err => {
-                res.status(500).end(err)
-            })
+        let result = await this.storyModel.find({}).lean();
+        res.ok(result);
     }
 
     /**
      * Create new a story
      */
-    create(req, res) {
+    async create(req, res) {
         let story = req.body
         // console.log('data:', story)
         if (!story || typeof story.intentName !== 'string') {
-            return res.status(400).end('Missing intentName')
+            return res.badRequest('Missing intentName');
         }
-        story.intentName = story.intentName.replace(/\s+/g, '_')
-        this.storyModel.create(story)
-            .then((result) => {
-                res.json(result)
-            })
-            .catch((err) => {
-                console.error('err:', err)
-                res.status(500).end(err)
-            })
+
+        story.intentName = story.intentName.replace(/\s+/g, '_');
+        let result = await this.storyModel.create(story);
+        res.ok(result);
     }
 
-    read(req, res) {
+    async read(req, res) {
         let storyId = req.param('id')
-        if (!storyId) return res.status(400).end('missing story')
+        if (!storyId) return res.badRequest('missing story');
 
         // find record details
-        this.storyModel.find({
+        let result = await this.storyModel.find({
                 _id: storyId
             })
-            .lean()
-            .then((result) => {
-                res.json(result)
-            })
-            .catch(err => {
-                res.status(500).end(err)
-            })
+            .lean();
+
+        res.ok(result);
     }
 
-    update(req, res) {
+    async update(req, res) {
         let storyId = req.param('id')
-        if (!storyId) return res.status(400).end('missing story')
+        if (!storyId) return res.badRequest('missing story');
 
         // find record details
-        this.storyModel.update({
+        let result = await this.storyModel.update({
                 _id: storyId
             }, {
                 $set: req.body
             })
-            .lean()
-            .then((result) => {
-                res.json(result)
-            })
-            .catch(err => {
-                res.status(500).end(err)
-            })
+            .lean();
+
+        res.ok(result);
     }
 
-    delete(req, res) {
+    /**
+     * Hàm xóa kịch bản theo id
+     * @param {*} req
+     * @param {*} res
+     */
+    async remove(req, res) {
         let storyId = req.param('id')
-        if (!storyId) return res.status(400).end('missing story')
+        if (!storyId) return res.badRequest('missing story');
 
         // find record details
         // TODO: system intent can not remove (init_conversation, fallback, cancel)
-        this.storyModel.findByIdAndRemove(storyId)
-            .lean()
-            .then((result) => {
-                res.json(result)
-            })
-            .catch(err => {
-                res.status(500).end(err)
-            })
+        let result = await this.storyModel.findByIdAndRemove(storyId).lean();
+        res.ok(result);
     }
 
     /**
      * Thêm mới một mẫu học đã được gán nhãn!
      */
-    'put /:storyId/labeled' (req, res) {
+    async 'put /:storyId/labeled' (req, res) {
         let storyId = req.param('storyId')
-        if (!storyId) return res.status(400).end('missing story')
+        if (!storyId) return res.badRequest('missing story');
 
         // find record details
-        this.storyModel.findOneAndUpdate({
+        let result = await this.storyModel.findOneAndUpdate({
                 _id: storyId
             }, {
                 $push: {
@@ -118,22 +98,21 @@ class StoryController {
                 new: true
             })
             .select('labeledSentences')
-            .lean()
-            .then((result) => {
-                res.json(result)
-            })
-            .catch(err => {
-                res.status(500).end(err)
-            })
+            .lean();
+
+        res.ok(result);
     }
 
-    'delete /:storyId/labeled/:labeledId' (req, res) {
+    async 'delete /:storyId/labeled/:labeledId' (req, res) {
         let storyId = req.param('storyId')
         let labeledId = req.param('labeledId')
-        if (!storyId || !labeledId || labeledId === 'undefined') return res.status(400).end('missing story or labeled id')
+
+        if (!storyId || !labeledId || labeledId === 'undefined') {
+            return res.badRequest('missing story or labeled id')
+        }
 
         // find record details
-        this.storyModel.update({
+        let result = await this.storyModel.update({
                 _id: storyId
             }, {
                 $pull: {
@@ -142,15 +121,10 @@ class StoryController {
                     }
                 }
             })
-            .lean()
-            .then((result) => {
-                res.json(result)
-            })
-            .catch(err => {
-                res.status(500).end(err && err.toString())
-            })
+            .lean();
+
+        res.ok(result);
     }
 }
 
 module.exports = StoryController;
-// module.exports = class B {};

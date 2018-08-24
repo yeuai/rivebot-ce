@@ -1,11 +1,7 @@
 'use strict';
 
 const config = require('config')
-const vntk = require('vntk')
 const handlebars = require('handlebars')
-
-const tagger = vntk.posTag()
-const wordSent = vntk.wordTokenizer()
 
 // load config name
 const DEFAULT_WELCOME_INTENT_NAME = config.get('modelConfig.DEFAULT_WELCOME_INTENT_NAME')
@@ -25,6 +21,11 @@ class NLUController {
         })
     }
 
+    /**
+     * Huấn luyện dữ liệu theo kịch bản được thiết kế bởi Rivebot
+     * @param {*} req
+     * @param {*} res
+     */
     'train/:id' (req, res) {
         let storyId = req.param('id')
         this.intentService.train()
@@ -39,27 +40,12 @@ class NLUController {
             })
     }
 
-
-    'pos/:text' (req, res) {
-        let text = req.param('text')
-        let storyId = req.param('storyId')
-
-        if (storyId) {
-            // use pre-trained model
-            let pretrained_tags = this.nerService.tag(storyId, text)
-            return res.json(pretrained_tags)
-        } else {
-            let tags = tagger.tag(text).map((tokens) => [tokens[0], tokens[1], 'O'])
-            res.json(tags)
-        }
-    }
-
-    'tok/:text' (req, res) {
-        let text = req.param('text')
-        let tokens = wordSent.tag(text);
-        res.json(tokens)
-    }
-
+    /**
+     * Hàm lý luận dựa vào dữ kiện kịch bản và ý định của khách hàng
+     * Trả về một đoạn văn bản mà khách hàng mong muốn nhận được câu trả lời
+     * @param {*} req
+     * @param {*} res
+     */
     'chat/:text' (req, res) {
         let input = req.param('text')
         let complete = req.param('complete')
