@@ -1,6 +1,6 @@
 angular
     .module('app.main')
-    .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
+    .config(['$stateProvider', '$urlRouterProvider', '$locationProvider','$qProvider', function ($stateProvider, $urlRouterProvider, $locationProvider,$qProvider) {
 
         // Homepage
         $stateProvider
@@ -19,6 +19,12 @@ angular
                 controller: 'storyController',
                 templateUrl: '/views/stories/main.html'
             })
+            .state('chatlog', {
+                url: '/chatlog',
+                controller: 'logController',
+                templateUrl: '/views/chatlog/main.html'
+            })
+
 
         // Public & common routes
         $stateProvider
@@ -67,5 +73,7 @@ angular
             enabled: true,
             requireBase: true
         });
+
+        $qProvider.errorOnUnhandledRejections(false);
 
     }])
