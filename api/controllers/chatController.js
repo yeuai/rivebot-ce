@@ -3,6 +3,9 @@
  * Controller điều khiển các tương tác với dữ liệu lịch sử chat
  * Sử dụng kỹ thuật Await/Async để tối giản các lệnh lập trình
  */
+
+const LIMIT=10
+
 class ChatController {
 
     constructor(kites) {
@@ -10,7 +13,7 @@ class ChatController {
             this.chatModel = this.kites.db.chat;
         })
     }
-
+    
     /**
      * Get all stories
      * TODO: filter by bot id
@@ -18,8 +21,36 @@ class ChatController {
      */
     async findAll(req, res) {
         // get all stories
-        let result = await this.chatModel.find({});
-        res.ok(result);
+
+        let intent_req = req.param('intent')
+        let ner_req = req.param('ner')
+        let PAGE = req.param('page')
+        let query = {}
+        if (!PAGE){
+            PAGE = 0 
+        } else {
+            if (PAGE==1){
+                PAGE = 0
+            } else{
+                PAGE = PAGE - 1
+                
+            }
+            
+        }
+
+        let OFFSET = PAGE * LIMIT
+        
+        if (intent_req){
+            query.intent = intent_req
+
+        }
+        if(ner_req){
+            query.tags = {"$in": [ner_req]}
+
+        }
+
+        let result = await this.chatModel.find(query).skip(OFFSET).limit(LIMIT);
+        return res.ok(result);
     }
 
     /**
@@ -27,6 +58,7 @@ class ChatController {
      */
     async create(req, res) {
         let chat = req.body
+
         if (!chat || typeof chat.text !== 'string') {
             return res.badRequest('Missing chat content: text');
         }
@@ -40,7 +72,7 @@ class ChatController {
      * @param {*} req
      * @param {*} res
      */
-    async read(req, res) {
+    async read(req, res) {  
         let id = req.param('id')
         if (!id) return res.badRequest('missing chat id')
 
@@ -74,16 +106,22 @@ class ChatController {
      * @param {*} req
      * @param {*} res
      */
-    async delete(req, res) {
+    async remove(req, res) {
         let id = req.param('id')
+        console.log(id)
         if (!id) return res.badRequest('missing chat id')
-
+        if (id==0){
+            let result = await this.chatModel.remove({});
+            res.ok(result)
+            
+        } else{
+            let result = await this.chatModel.findByIdAndRemove(id);
+            res.ok(result)
+        }
         // find record details
         // TODO: system intent can not remove (init_conversation, fallback, cancel)
-        let result = await this.chatModel.findByIdAndRemove(id);
-        res.ok(result)
+        
     }
-
 }
 
 module.exports = ChatController;
