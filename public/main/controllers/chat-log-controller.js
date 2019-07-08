@@ -63,11 +63,11 @@ angular.module('app.main')
                     $scope.payloadPreview = JSON.stringify(data, null, 4)
                     $scope.messages.push(reply);
                     $log.info('Bot reply:', data);
-                    util.scrollToBottom()
+                    // util.scrollToBottom()
                 });
 
                 $scope.message = "";
-                util.scrollToBottom()
+                // util.scrollToBottom()
 
                 // add to msg box
                 if (append !== false) {
