@@ -26,7 +26,7 @@ class NLUController {
      * @param {*} req
      * @param {*} res
      */
-    'train/:id' (req, res) {
+    'train/:id'(req, res) {
         let storyId = req.param('id')
         this.intentService.train()
             .then(result => {
@@ -46,15 +46,15 @@ class NLUController {
      * @param {*} req
      * @param {*} res
      */
-    'chat/:text' (req, res) {
+    'chat/:text'(req, res) {
         let input = req.param('text')
         let complete = req.param('complete')
         let context = req.param('context', {})
 
         if (input === DEFAULT_WELCOME_INTENT_NAME) {
             return this.kites.db.story.findOne({
-                    intentName: DEFAULT_WELCOME_INTENT_NAME
-                })
+                intentName: DEFAULT_WELCOME_INTENT_NAME
+            })
                 .lean()
                 .then((story) => {
 
