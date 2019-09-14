@@ -1,40 +1,58 @@
 {
-    "extensionsLocationCache": true,
-    "logger": {
-        "console": {
-            "transport": "console",
-            "level": "info"
-        }
-    },
-    "extensions": null,
-    "api": {
-        "useBaseModel" : false,
-        "connection": "mongodb",
-        "dataSource": [{
-            "name": "memory",
-            "driver": "memory",
-            "active": true
-        }, {
-            "name": "mongodb",
-            "driver": "mongoose",
-            "host": "localhost",
-            "port": "27017",
-            "username": "",
-            "password": "",
-            "database": "rivebot",
-            "active": true,
-            "rs": false
-        }]
-    },
-    "express": {
-        "static": "./public",
-        "httpPort": 3000,
-        "poweredBy": "Yeu.AI",
-        "views": {
-            "ext": "ejs",
-            "engine": "ejs",
-            "renderer": "renderFile",
-            "path": "content/views"
-        }
+  "extensionsLocationCache": true,
+  "logger": {
+    "console": {
+      "transport": "console",
+      "level": "info"
     }
+  },
+  "extensions": null,
+  "db": {
+    "connection": "mongodb-memory",
+    "dbName": "rivebot",
+    "dataSource": [
+      {
+        "name": "memory",
+        "driver": "memory",
+        "active": true
+      },
+      {
+        "name": "mongodb-memory",
+        "driver": "mongodb-memory-server",
+        "port": "27071",
+        "version": "4.0.3",
+        "active": true
+      }
+    ]
+  },
+  "api": {
+    "useBaseModel": false,
+    "connection": "mongodb",
+    "dataSource": [{
+      "name": "memory",
+      "driver": "memory",
+      "active": true
+    }, {
+      "name": "mongodb",
+      "driver": "mongoose",
+      "host": "localhost",
+      "port": "27017",
+      "username": "",
+      "password": "",
+      "database": "rivebot",
+      "active": true,
+      "rs": false
+    }]
+  },
+  "express": {
+    "static": "./public",
+    "httpPort": 3000,
+    "poweredBy": "Rivebot Community Edition",
+    "views": {
+      "ext": "ejs",
+      "engine": "ejs",
+      "renderer": "renderFile",
+      "path": "content/views"
+    }
+  }
 }

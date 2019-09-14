@@ -1,1 +1,6 @@
---timeout 120000
+--require ts-node/register
+--require node_modules/reflect-metadata/Reflect.js
+--reporter spec
+--retries 3
+api/**/*.spec.ts
+test/**/*.spec.ts
