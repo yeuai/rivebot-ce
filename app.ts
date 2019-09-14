@@ -5,14 +5,23 @@ import Rest from '@kites/rest';
 
 import * as mongoose from 'mongoose';
 import { MongoDbServerDev, appRoutes } from './content/extensions';
+import {
+  WordFeatures, IntentService, IntentClassifier, IobParser,
+  SequenceLabeler, NerService, NLUService,
+} from 'api';
 
 async function bootstrap() {
   const app = await KitesFactory
     .create({
       loadConfig: true,
       providers: [
-        // UserService,
-        // textService,
+        WordFeatures,
+        IntentClassifier,
+        IobParser,
+        SequenceLabeler,
+        IntentService,
+        NerService,
+        NLUService,
       ],
     })
     .use(Express)

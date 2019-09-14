@@ -11,7 +11,15 @@
     "target": "es6",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "@api/*": [
+        "api/*"
+      ],
+      "@content/*": [
+        "content/*"
+      ]
+    }
   },
   "exclude": [
     "node_modules",
