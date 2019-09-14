@@ -68,3 +68,4 @@ production.yml
 # kites.js
 dev.config.json
 prod.config.json
+frontend

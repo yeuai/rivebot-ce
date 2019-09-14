@@ -6,7 +6,19 @@
       "level": "info"
     }
   },
-  "extensions": null,
+  "modelConfig": {
+    "INTENT_MODEL_NAME": "intent.model",
+    "MODELS_DIR": "model_files",
+    "TRAIN_DATA_NAME": "intent.txt",
+    "DEFAULT_FALLBACK_INTENT_NAME": "fallback",
+    "DEFAULT_WELCOME_INTENT_NAME": "init_conversation"
+  },
+  "crfConfig": {
+    "c1": 1.0,
+    "c2": 0.001,
+    "max_iterations": 300,
+    "feature_possible_transitions": 1
+  },
   "db": {
     "connection": "mongodb-memory",
     "dbName": "rivebot",
@@ -28,21 +40,24 @@
   "api": {
     "useBaseModel": false,
     "connection": "mongodb",
-    "dataSource": [{
-      "name": "memory",
-      "driver": "memory",
-      "active": true
-    }, {
-      "name": "mongodb",
-      "driver": "mongoose",
-      "host": "localhost",
-      "port": "27017",
-      "username": "",
-      "password": "",
-      "database": "rivebot",
-      "active": true,
-      "rs": false
-    }]
+    "dataSource": [
+      {
+        "name": "memory",
+        "driver": "memory",
+        "active": true
+      },
+      {
+        "name": "mongodb",
+        "driver": "mongoose",
+        "host": "localhost",
+        "port": "27017",
+        "username": "",
+        "password": "",
+        "database": "rivebot",
+        "active": true,
+        "rs": false
+      }
+    ]
   },
   "express": {
     "static": "./public",
