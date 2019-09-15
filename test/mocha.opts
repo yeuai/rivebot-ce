@@ -1,5 +1,6 @@
 --require ts-node/register
---require node_modules/reflect-metadata/Reflect.js
+--require tsconfig-paths/register
+--require node_modules/reflect-metadata/Reflect
 --reporter spec
 --retries 3
 api/**/*.spec.ts
