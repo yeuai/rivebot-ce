@@ -10,6 +10,7 @@ import { IntentClassifier } from '../core/intent-classifier';
 /**
  * Intent Service Definition
  */
+@Injectable()
 class IntentService {
 
   constructor(

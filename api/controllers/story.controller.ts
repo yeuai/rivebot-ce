@@ -30,6 +30,7 @@ export class StoryController {
    * TODO: filter by bot id
    * TODO: Pagination
    */
+  @Get('/')
   async findAll(req, res) {
     // get all stories
     const result = await StoryModel.find({}).lean();

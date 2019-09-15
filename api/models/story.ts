@@ -1,4 +1,4 @@
-import { prop, Typegoose, arrayProp, Ref } from 'typegoose';
+import { prop, Typegoose, arrayProp, Ref } from '@hasezoey/typegoose';
 
 class LabeledSentences extends Typegoose {
   @arrayProp({ items: String }) data: any[];

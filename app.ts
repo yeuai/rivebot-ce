@@ -1,14 +1,13 @@
 import { KitesFactory, KitesInstance } from '@kites/core';
 import Express from '@kites/express';
 import Rest from '@kites/rest';
-// import { UserService } from './api';
 
 import * as mongoose from 'mongoose';
 import { MongoDbServerDev, appRoutes } from './content/extensions';
 import {
   WordFeatures, IntentService, IntentClassifier, IobParser,
   SequenceLabeler, NerService, NLUService,
-} from 'api';
+} from '@api/index';
 
 async function bootstrap() {
   const app = await KitesFactory
@@ -30,7 +29,11 @@ async function bootstrap() {
     .use(MongoDbServerDev)
     .on('db:connect', (uri: string, kites: KitesInstance) => {
       if (typeof uri === 'string') {
-        mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+        mongoose.connect(uri, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          useCreateIndex: true,
+        });
         kites.logger.info('Mongodb connect ok: ' + uri);
       } else {
         // get connection string from kites.config
