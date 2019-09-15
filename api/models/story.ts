@@ -1,10 +1,10 @@
 import { prop, Typegoose, arrayProp, Ref } from '@hasezoey/typegoose';
 
-class LabeledSentences extends Typegoose {
-  @arrayProp({ items: String }) data: any[];
-  @prop() text: string;
-  @prop() label: string;
-}
+// class LabeledSentences extends Typegoose {
+//   @arrayProp({ items: String }) data: any[];
+//   @prop() text: string;
+//   @prop() label: string;
+// }
 
 /**
  * Define Story class
@@ -32,10 +32,11 @@ class Story extends Typegoose {
     prompt: string,
   }];
 
-  @arrayProp({
-    _id: true,
-    itemsRef: LabeledSentences,
-  }) labeledSentences?: Array<Ref<LabeledSentences>>;
+  @prop() labeledSentences?: [{
+    data: any[];
+    text: string;
+    label: string;
+  }];
 }
 
 /**

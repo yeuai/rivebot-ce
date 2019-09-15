@@ -23,14 +23,14 @@ function appRoutes(kites: KitesInstance) {
      */
     kites.express.app.use((req, res, next) => {
       if (!req.route) {
-        return res.sendFile(join(kites.appDirectory, 'public/index.html'));
+        return res.status(404).sendFile(join(kites.appDirectory, 'public/index.html'));
       } else {
         next();
       }
     });
 
     kites.express.app.use((err, req, res, next) => {
-      kites.logger.error('Express handle error: ' + err);
+      kites.logger.error('Express handle error: ' + err && err.stack);
       res.status(500).json(err);
     });
   });

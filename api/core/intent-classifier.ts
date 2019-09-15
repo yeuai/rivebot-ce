@@ -3,7 +3,6 @@ import { KITES_INSTANCE, KitesInstance } from '@kites/core';
 
 import * as fs from 'fs';
 import * as _ from 'lodash';
-import * as vntk from 'vntk';
 
 import { Classifier } from 'fasttext';
 const sentenceClassifer = new Classifier();
@@ -16,16 +15,20 @@ class IntentClassifier {
   constructor(
     @Inject(KITES_INSTANCE) private kites: KitesInstance,
   ) {
-    this.INTENT_MODEL_NAME = `${this.kites.options.modelConfig.MODELS_DIR}/${this.kites.options.modelConfig.INTENT_MODEL_NAME}`;
-    this.TRAIN_DATA_NAME = `${this.kites.options.modelConfig.MODELS_DIR}/${this.kites.options.modelConfig.TRAIN_DATA_NAME}`;
+    try {
+      this.INTENT_MODEL_NAME = `${this.kites.options.modelConfig.MODELS_DIR}/${this.kites.options.modelConfig.INTENT_MODEL_NAME}`;
+      this.TRAIN_DATA_NAME = `${this.kites.options.modelConfig.MODELS_DIR}/${this.kites.options.modelConfig.TRAIN_DATA_NAME}`;
 
-    const modelBin = this.INTENT_MODEL_NAME + '.bin';
-    if (fs.existsSync(modelBin)) {
-      this.kites.logger.info('Load pre-trained model: ' + modelBin);
-      sentenceClassifer.loadModel(modelBin)
-        .then((res) => {
-          this.kites.logger.info('Load pre-trained model ok!');
-        });
+      const modelBin = this.INTENT_MODEL_NAME + '.bin';
+      if (fs.existsSync(modelBin)) {
+        this.kites.logger.info('Load pre-trained model: ' + modelBin);
+        sentenceClassifer.loadModel(modelBin)
+          .then((res) => {
+            this.kites.logger.info('Load pre-trained model ok!');
+          });
+      }
+    } catch (error) {
+      this.kites.logger.error('Cannot load pre-trained model!');
     }
   }
 
@@ -67,7 +70,7 @@ class IntentClassifier {
   predict(text) {
     return sentenceClassifer.predict(text, 3)
       .then((res) => {
-        this.kites.logger.info('sentenceClassifer predict: ', res);
+        this.kites.logger.info('sentenceClassifer predict: ' + res);
         if (res.length > 0) {
           return res[0].label.replace(/^__label__/, '');
         } else {

@@ -1,4 +1,4 @@
-import { Controller, Get, RequestParam, QueryParam, RequestBody, Request } from '@kites/rest';
+import { Controller, Get, RequestParam, QueryParam, RequestBody, Request, Post } from '@kites/rest';
 import { Inject } from '@kites/common';
 import { KITES_INSTANCE, KitesInstance } from '@kites/core';
 
@@ -32,7 +32,7 @@ export class NLUController {
    * @param {*} req
    * @param {*} res
    */
-  @Get('/train/:id')
+  @Post('/train/:id')
   async train(
     @RequestParam('id') storyId: string,
   ) {
@@ -47,14 +47,14 @@ export class NLUController {
    * @param {*} req
    * @param {*} res
    */
-  @Get('/chat/:text')
+  @Post('/chat/:text')
   async chat(
     @RequestParam('text') input: string,
-    @Request() req: ExpressRequest,
+    @RequestBody() body: any,
   ) {
     this.kites.logger.info('New request: ' + input);
-    const complete = req.param('complete');
-    const context = req.param('context', {});
+    const complete = body.complete;
+    const context = body.context;
 
     if (input === this.DEFAULT_WELCOME_INTENT_NAME) {
       const defaultStory = await StoryModel.findOne({
@@ -66,7 +66,7 @@ export class NLUController {
         throw new Error('Story: ' + input);
       }
 
-      const result = req.body;
+      const result = body;
       result.input = input;
       result.complete = true;
       result.intent = {
@@ -83,9 +83,9 @@ export class NLUController {
 
     let responseResult;
     if (complete === 'false') {
-      responseResult = await this.nluService.buildNonCompleteResponse(story, req);
+      responseResult = await this.nluService.buildNonCompleteResponse(story, body);
     } else {
-      responseResult = await this.nluService.buildCompleteResponse(story, req);
+      responseResult = await this.nluService.buildCompleteResponse(story, body);
     }
 
     if (responseResult.complete) {

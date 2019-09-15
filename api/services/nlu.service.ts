@@ -23,9 +23,9 @@ class NLUService {
    * @param {Object} story
    * @param {Request} req
    */
-  buildCompleteResponse(story, req) {
-    const input = req.param('input');
-    const result = req.body;
+  buildCompleteResponse(story, body) {
+    const result = body;
+    const input = body.input;
     let parameters = [];
     if (!story) {
       throw new Error('Not found story: ' + input);
@@ -86,10 +86,10 @@ class NLUService {
    * Xây dựng câu trả lời với trạng thái chưa hoàn tất
    * Chờ người dùng nhập đủ thông tin yêu cầu
    * @param {Object} story
-   * @param {Request} req
+   * @param {RequestBody} body
    */
-  buildNonCompleteResponse(story, req) {
-    const result = req.body;
+  buildNonCompleteResponse(story, body) {
+    const result = body;
 
     if (story.intentName === 'cancel') {
       result.currentNode = '';
@@ -99,13 +99,19 @@ class NLUService {
       result.complete = true;
       return Promise.resolve(result);
     } else {
-      const storyId = req.param('intent').storyId;
-      let currentNode = req.param('currentNode');
-      const extractedParameters = req.param('extractedParameters', {});
-      const missingParameters = req.param('missingParameters', []);
+      const storyId = body.intent.storyId;
+      let currentNode = body.currentNode;
+      let extractedParameters = body.extractedParameters || {};
+      const missingParameters = body.missingParameters || [];
       const currentNodeIndex = missingParameters.indexOf(currentNode);
 
-      extractedParameters[currentNode] = req.param('input');
+      if (typeof extractedParameters === 'string') {
+        extractedParameters = JSON.parse(extractedParameters);
+      }
+      this.kites.logger.info('storyId: ' + storyId);
+      this.kites.logger.info('currentNode: ' + currentNode);
+      this.kites.logger.info('extractedParameters: ' + extractedParameters + typeof extractedParameters);
+      extractedParameters[currentNode] = body.input;
       missingParameters.splice(currentNodeIndex, 1);
 
       if (missingParameters.length > 0) {
