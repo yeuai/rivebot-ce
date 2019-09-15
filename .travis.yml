@@ -5,7 +5,8 @@ os:
 - osx
 
 node_js:
-- '8'
+- 8
+- 10
 
 before_install:
 # show product version
@@ -14,4 +15,4 @@ before_install:
 - npm --version
 
 install:
-- npm install
+- npm ci
