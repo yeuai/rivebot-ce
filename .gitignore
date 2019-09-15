@@ -57,6 +57,7 @@ typings/
 
 # dotenv environment variables file
 .env
+.mdb
 
 .vscode
 model_files
@@ -67,3 +68,5 @@ production.yml
 # kites.js
 dev.config.json
 prod.config.json
+frontend
+uploads
