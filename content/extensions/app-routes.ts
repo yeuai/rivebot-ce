@@ -28,6 +28,11 @@ function appRoutes(kites: KitesInstance) {
         next();
       }
     });
+
+    kites.express.app.use((err, req, res, next) => {
+      kites.logger.error('Express handle error: ' + err);
+      res.status(500).json(err);
+    });
   });
 }
 

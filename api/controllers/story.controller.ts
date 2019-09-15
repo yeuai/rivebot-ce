@@ -1,17 +1,9 @@
-import { Controller, Get, RequestParam, QueryParam, RequestBody, Request, Post, Put, Delete } from '@kites/rest';
+import { Controller, Get, RequestParam, QueryParam, RequestBody, Request, Post, Put, Delete, Response } from '@kites/rest';
 import { Inject } from '@kites/common';
 import { KITES_INSTANCE, KitesInstance } from '@kites/core';
 
-import * as vntk from 'vntk';
-import * as handlebars from 'handlebars';
-
-import { NerService, NLUService, IntentService } from 'api/services';
 import { StoryModel } from 'api/models';
-import { Request as ExpressRequest } from '@kites/express';
-
-const posTagger = vntk.posTag();
-const nerTagger = vntk.ner();
-const tokenizer = vntk.wordTokenizer();
+import { upload, uploadMemory } from './story.multer';
 
 /**
  * Story controller
@@ -150,6 +142,34 @@ export class StoryController {
       },
     }).lean();
 
+    return result;
+  }
+
+  /**
+   * Hàm lưu file upload & import db
+   * @param req e.Request
+   */
+  @Post('/imports', uploadMemory.single('datafile'))
+  async import(@Request() req) {
+    const msg = 'import ok!';
+    const data = req.file.buffer.toString('utf-8');
+    const stories = JSON.parse(data);
+
+    await StoryModel.deleteMany({});
+    await StoryModel.create(stories);
+
+    this.kites.logger.info(`File recently uploaded & imported!`);
+    return { msg };
+  }
+
+  /**
+   * Xuất dữ liệu db của ứng dụng
+   * @param res
+   */
+  @Get('/exports')
+  async export(@Response() res) {
+    res.attachment('yeu-ai.json').type('json');
+    const result = StoryModel.find().lean();
     return result;
   }
 }

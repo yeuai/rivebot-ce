@@ -69,3 +69,4 @@ production.yml
 dev.config.json
 prod.config.json
 frontend
+uploads

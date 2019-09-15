@@ -22,6 +22,8 @@
   "db": {
     "connection": "mongodb-memory",
     "dbName": "rivebot",
+    "imports": true,
+    "exports": true,
     "dataSource": [
       {
         "name": "memory",

@@ -40,14 +40,6 @@ async function bootstrap() {
         kites.logger.error('Please config mongodb connection!!!');
       }
     })
-    .on('ready', (kites: KitesInstance) => {
-      kites.logger.info('Extra config app when ready!');
-
-      kites.express.app.use((err, req, res, next) => {
-        console.error('Error: ', err);
-        res.status(500).json(err.message);
-      });
-    })
     .init();
 
   app.logger.info(`Server started!`);

@@ -1,6 +1,7 @@
 import { promisify } from 'util';
-import { mkdir, existsSync } from 'fs';
+import { mkdir, existsSync, readFileSync } from 'fs';
 import { KitesInstance } from '@kites/core';
+import { StoryModel } from '@api/index';
 
 /**
  * Start mongodb server for development
@@ -49,6 +50,22 @@ async function MongoDbServerDev(kites: KitesInstance) {
 
     // Emit connection string
     kites.emit('db:connect', uri, kites);
+
+    if (kites.options.db.imports) {
+      try {
+        const dbExports = kites.defaultPath('dump/exports/story.default.json');
+        const data = readFileSync(dbExports, 'utf8');
+        const stories = JSON.parse(data);
+
+        kites.logger.info('Starting import dev db ...');
+
+        await StoryModel.deleteMany({});
+        await StoryModel.create(stories);
+        kites.logger.info('Import dev db has done!');
+      } catch (error) {
+        kites.logger.error('Import dev db error: ' + error);
+      }
+    }
 
     /**
      * Application stop!

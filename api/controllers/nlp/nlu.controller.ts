@@ -2,16 +2,11 @@ import { Controller, Get, RequestParam, QueryParam, RequestBody, Request } from 
 import { Inject } from '@kites/common';
 import { KITES_INSTANCE, KitesInstance } from '@kites/core';
 
-import * as vntk from 'vntk';
 import * as handlebars from 'handlebars';
 
 import { NerService, NLUService, IntentService } from 'api/services';
 import { StoryModel } from 'api/models';
 import { Request as ExpressRequest } from '@kites/express';
-
-const posTagger = vntk.posTag();
-const nerTagger = vntk.ner();
-const tokenizer = vntk.wordTokenizer();
 
 /**
  * NLP controller
@@ -52,11 +47,12 @@ export class NLUController {
    * @param {*} req
    * @param {*} res
    */
-  @Get('chat/:text')
+  @Get('/chat/:text')
   async chat(
     @RequestParam('text') input: string,
     @Request() req: ExpressRequest,
   ) {
+    this.kites.logger.info('New request: ' + input);
     const complete = req.param('complete');
     const context = req.param('context', {});
 
