@@ -75,7 +75,7 @@ async function MongoDbServerDev(kites: KitesInstance) {
       await mongod.stop();
     });
   } else {
-    kites.emit('db:connect', null, kites);
+    kites.emit('db:connect', kites.options.db.uri, kites);
   }
 }
 

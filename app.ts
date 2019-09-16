@@ -7,7 +7,7 @@ import { MongoDbServerDev, appRoutes } from './content/extensions';
 import {
   WordFeatures, IntentService, IntentClassifier, IobParser,
   SequenceLabeler, NerService, NLUService,
-} from '@api/index';
+} from './api';
 
 async function bootstrap() {
   const app = await KitesFactory
