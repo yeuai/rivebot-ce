@@ -1,5 +1,5 @@
-import * as multer from 'multer';
-import * as mkdirp from 'mkdirp';
+import multer from 'multer';
+import mkdirp from 'mkdirp';
 
 /**
  * Khởi tạo disk storage cho việc lưu trữ file

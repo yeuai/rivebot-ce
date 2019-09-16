@@ -2,7 +2,7 @@ import { KitesFactory, KitesInstance } from '@kites/core';
 import Express from '@kites/express';
 import Rest from '@kites/rest';
 
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import { MongoDbServerDev, appRoutes } from './content/extensions';
 import {
   WordFeatures, IntentService, IntentClassifier, IobParser,

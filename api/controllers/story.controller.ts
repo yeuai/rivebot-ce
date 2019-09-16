@@ -3,7 +3,7 @@ import { Inject } from '@kites/common';
 import { KITES_INSTANCE, KitesInstance } from '@kites/core';
 
 import { StoryModel } from 'api/models';
-import { upload, uploadMemory } from './story.multer';
+import { upload, uploadMemory } from './upload.multer';
 
 /**
  * Story controller

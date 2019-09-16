@@ -1,7 +1,7 @@
 import { Injectable } from '@kites/common';
 import * as dict from '@vntk/dictionary';
 import * as _ from 'lodash';
-import * as titleCase from 'title-case';
+import titleCase from 'title-case';
 
 /**
  * ===========================

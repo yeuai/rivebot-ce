@@ -1,7 +1,9 @@
 --require ts-node/register
 --require tsconfig-paths/register
 --require node_modules/reflect-metadata/Reflect
+--require app.ts
 --reporter spec
 --retries 3
+--exit
 api/**/*.spec.ts
 test/**/*.spec.ts
