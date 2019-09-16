@@ -3,6 +3,7 @@
 --require node_modules/reflect-metadata/Reflect
 --require app.ts
 --reporter spec
+--delay true
 --retries 3
 --exit
 api/**/*.spec.ts
