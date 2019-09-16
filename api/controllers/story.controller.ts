@@ -3,7 +3,7 @@ import { Inject } from '@kites/common';
 import { KITES_INSTANCE, KitesInstance } from '@kites/core';
 
 import { StoryModel } from 'api/models';
-import { upload, uploadMemory } from './upload.multer';
+import { uploadMemory } from './upload.multer';
 
 /**
  * Story controller
@@ -18,6 +18,19 @@ export class StoryController {
   }
 
   /**
+   * Xuất dữ liệu db của ứng dụng
+   * Move lên đầu, tránh trùng với GET /api/story/:id
+   * @param res
+   */
+  @Get('/exports')
+  async export(@Response() res) {
+    this.kites.logger.info('Preparing exports stories!');
+    res.attachment('yeu-ai.json').type('json');
+    const result = await StoryModel.find({}).lean();
+    return result;
+  }
+
+  /**
    * Get all stories
    * TODO: filter by bot id
    * TODO: Pagination
@@ -25,7 +38,7 @@ export class StoryController {
   @Get('/')
   async findAll(req, res) {
     // get all stories
-    const result = await StoryModel.find({}).lean();
+    const result = await StoryModel.find({}).limit(1000).lean();
     return result;
   }
 
@@ -45,6 +58,10 @@ export class StoryController {
     return result;
   }
 
+  /**
+   * Chi tiết một kịch bản
+   * Lưu ý: Api GET có thể bị trùng với /api/story/something
+   */
   @Get('/:id')
   async read(
     @RequestParam('id') storyId: string,
@@ -160,16 +177,5 @@ export class StoryController {
 
     this.kites.logger.info(`File recently uploaded & imported!`);
     return { msg };
-  }
-
-  /**
-   * Xuất dữ liệu db của ứng dụng
-   * @param res
-   */
-  @Get('/exports')
-  async export(@Response() res) {
-    res.attachment('yeu-ai.json').type('json');
-    const result = StoryModel.find().lean();
-    return result;
   }
 }

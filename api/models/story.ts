@@ -44,6 +44,7 @@ class Story extends Typegoose {
  */
 const StoryModel = new Story().getModelForClass(Story, {
   schemaOptions: {
+    // _id: true,
     timestamps: true,
     collection: 'story',
   },
