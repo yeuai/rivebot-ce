@@ -78,8 +78,17 @@ export class NLUController {
     }
 
     let intentName = await this.intentService.predict(input);
-    if (!intentName) { intentName = this.DEFAULT_FALLBACK_INTENT_NAME; }
-    const story = await StoryModel.findOne({ intentName }).lean();
+    if (!intentName) {
+      intentName = this.DEFAULT_FALLBACK_INTENT_NAME;
+    } else {
+      this.kites.logger.info('Intent detected: ' + intentName);
+    }
+    let story = await StoryModel.findOne({ intentName }).lean();
+
+    if (!story) {
+      intentName = this.DEFAULT_FALLBACK_INTENT_NAME;
+      story = await StoryModel.findOne({ intentName }).lean();
+    }
 
     let responseResult;
     if (complete === 'false') {
