@@ -1,39 +1,29 @@
-<div class="container">
-    <div class="page-header">
-        <h1>Rivebot Community Edition</h1>
-        <p>Fork me
-            <a href="https://github.com/yeuai/rivebot-ce" target="_blank">@yeuai/rivebot-ce</a>
-        </p>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4 chat-area">
-            <ul class="chat">
-                <li class="clearfix" ng-repeat="msg in messages track by $index" ng-class="{right: !msg.fromBot, left: msg.fromBot}">
-                    <div class="chat-body clearfix">
-                        <strong class="primary-font" ng-if="msg.fromBot">Coco</strong>
-                        <strong class="primary-font" ng-if="!msg.fromBot">You</strong>
-                        <p ng-bind="msg.text"></p>
-                    </div>
-                </li>
-            </ul>
-            <form class="footer" ng-submit="sendMessage()">
-                <div class="input-group">
-                    <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." ng-model="message" required
-                    />
-                    <span class="input-group-btn">
-                        <button class="btn btn-warning btn-sm" id="btn-chat" type="submit">
-                            Send</button>
-                    </span>
-                </div>
-            </form>
+<div class="row">
+  <div class="col-md-4 chat-area">
+    <ul class="chat">
+      <li class="clearfix" ng-repeat="msg in messages track by $index" ng-class="{right: !msg.fromBot, left: msg.fromBot}">
+        <div class="chat-body clearfix">
+          <strong class="primary-font" ng-if="msg.fromBot">Coco</strong>
+          <strong class="primary-font" ng-if="!msg.fromBot">You</strong>
+          <p ng-bind="msg.text"></p>
         </div>
-        <div class="col-md-6">
-            <h4>DEBUG Console</h4>
-            <h5>
-                <a ui-sref="stories"><span class="fa fa-hand-o-right"></span> Quản lý kịch bản hội thoại</a>
-            </h5>
-            <pre ng-bind="payloadPreview">.</pre>
-        </div>
-    </div>
+      </li>
+    </ul>
+    <form class="footer" ng-submit="sendMessage()">
+      <div class="input-group">
+        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." ng-model="message" required />
+        <span class="input-group-btn">
+          <button class="btn btn-warning btn-sm" id="btn-chat" type="submit">
+            Send</button>
+        </span>
+      </div>
+    </form>
+  </div>
+  <div class="col-md-6">
+    <h4>DEBUG Console</h4>
+    <h5>
+      <a ui-sref="stories"><span class="fa fa-hand-o-right"></span> Quản lý kịch bản hội thoại</a>
+    </h5>
+    <pre ng-bind="payloadPreview">.</pre>
+  </div>
 </div>
