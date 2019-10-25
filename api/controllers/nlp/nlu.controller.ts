@@ -75,7 +75,7 @@ export class NLUController {
     const story = await this.svIntent.findIntent(intentName);
 
     let responseResult;
-    if (complete === 'false') {
+    if (complete === false) {
       responseResult = await this.svNLU.buildNonCompleteResponse(story, body);
     } else {
       responseResult = await this.svNLU.buildCompleteResponse(story, body);

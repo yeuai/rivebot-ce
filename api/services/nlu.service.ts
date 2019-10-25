@@ -12,14 +12,14 @@ class NLUService {
 
   constructor(
     @Inject(KITES_INSTANCE) private kites: KitesInstance,
-    private nerService: NerService,
+    private svNER: NerService,
   ) {
     this.kites.logger.info('NLU Service is ready!');
   }
 
   /**
-   * Xây dựng câu trả lời với trạng thái hoàn tất
-   * Người dùng đã nhập đủ thông tin yêu cầu
+   * Khởi tạo một câu chuyện mới
+   * Thiết lập các trạng thái ban đầu
    * @param {Object} story
    * @param {Request} req
    */
@@ -49,7 +49,7 @@ class NLUService {
     let extractedParameters = [];
     const missingParameters = [];
     if (parameters.length > 0) {
-      extractedParameters = this.nerService.predict(storyId, input);
+      extractedParameters = this.svNER.predict(storyId, input);
       this.kites.logger.info('nerService predict: ', extractedParameters);
 
       // check required parameters
@@ -83,8 +83,9 @@ class NLUService {
   }
 
   /**
-   * Xây dựng câu trả lời với trạng thái chưa hoàn tất
-   * Chờ người dùng nhập đủ thông tin yêu cầu
+   * Trích xuất câu trả lời từ đoạn hội thoại người dùng
+   * - Đảm bảo bộ khung các câu hỏi được trả lời (required)
+   * - Nếu tất cả các câu hỏi được trả lời -> Hoàn tất đoạn hội thoại, khuyến nghị người dùng bắt đầu một câu chuyện khác
    * @param {Object} story
    * @param {RequestBody} body
    */
@@ -101,17 +102,18 @@ class NLUService {
     } else {
       const storyId = body.intent.storyId;
       let currentNode = body.currentNode;
-      let extractedParameters = body.extractedParameters || {};
+      const extractedParameters = body.extractedParameters || {};
       const missingParameters = body.missingParameters || [];
       const currentNodeIndex = missingParameters.indexOf(currentNode);
+      const currentNodeExtractedParameters = this.svNER.predict(storyId, body.input);
 
-      if (typeof extractedParameters === 'string') {
-        extractedParameters = JSON.parse(extractedParameters);
-      }
+      // Update extracted parameters
+      Object.assign(extractedParameters, currentNodeExtractedParameters);
+
       this.kites.logger.info('storyId: ' + storyId);
       this.kites.logger.info('currentNode: ' + currentNode);
-      this.kites.logger.info('extractedParameters: ' + extractedParameters + typeof extractedParameters);
-      extractedParameters[currentNode] = body.input;
+      this.kites.logger.info('extractedParameters: ' + JSON.stringify(extractedParameters));
+      // Remove solved current node
       missingParameters.splice(currentNodeIndex, 1);
 
       if (missingParameters.length > 0) {
