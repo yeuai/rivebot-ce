@@ -17,7 +17,7 @@ export class NLPController {
 
   constructor(
     @Inject(KITES_INSTANCE) private kites: KitesInstance,
-    private nerService: NerService,
+    private svNER: NerService,
   ) {
     this.kites.logger.debug('Init NLP controller!');
   }
@@ -47,7 +47,7 @@ export class NLPController {
     @QueryParam('storyId') storyId: string,
   ) {
     if (storyId) {
-      const pretrainedTags = this.nerService.tag(storyId, text);
+      const pretrainedTags = this.svNER.tag(storyId, text);
       return pretrainedTags;
     } else {
       const tags = posTagger.tag(text).map((tokens) => [tokens[0], tokens[1], 'O']);

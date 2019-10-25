@@ -70,11 +70,11 @@ class IntentClassifier {
   predict(text) {
     return sentenceClassifer.predict(text, 3)
       .then((res) => {
-        this.kites.logger.info('sentenceClassifer predict: ' + res);
+        this.kites.logger.info('sentenceClassifer predict: ' + JSON.stringify(res));
         if (res.length > 0) {
           return res[0].label.replace(/^__label__/, '');
         } else {
-          return false;
+          return undefined;
         }
       });
   }

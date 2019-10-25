@@ -13,18 +13,14 @@ import { Request as ExpressRequest } from '@kites/express';
  */
 @Controller('/nlu')
 export class NLUController {
-  DEFAULT_WELCOME_INTENT_NAME: string;
-  DEFAULT_FALLBACK_INTENT_NAME: string;
 
   constructor(
     @Inject(KITES_INSTANCE) private kites: KitesInstance,
-    private nerService: NerService,
-    private nluService: NLUService,
-    private intentService: IntentService,
+    private svNER: NerService,
+    private svNLU: NLUService,
+    private svIntent: IntentService,
   ) {
     this.kites.logger.debug('Init NLU controller!');
-    this.DEFAULT_FALLBACK_INTENT_NAME = this.kites.options.modelConfig.DEFAULT_FALLBACK_INTENT_NAME;
-    this.DEFAULT_WELCOME_INTENT_NAME = this.kites.options.modelConfig.DEFAULT_WELCOME_INTENT_NAME;
   }
 
   /**
@@ -36,8 +32,8 @@ export class NLUController {
   async train(
     @RequestParam('id') storyId: string,
   ) {
-    await this.intentService.train();
-    const result = await this.nerService.trainStory(storyId);
+    await this.svIntent.train();
+    const result = await this.svNER.trainStory(storyId);
     return result;
   }
 
@@ -56,13 +52,11 @@ export class NLUController {
     const complete = body.complete;
     const context = body.context;
 
-    if (input === this.DEFAULT_WELCOME_INTENT_NAME) {
-      const defaultStory = await StoryModel.findOne({
-        intentName: this.DEFAULT_WELCOME_INTENT_NAME,
-      }).lean();
+    if (input === this.svIntent.DefaultWelcome) {
+      const defaultStory = await this.svIntent.getWelcomeIntent();
 
       if (!defaultStory) {
-        this.kites.logger.error('No default story: ' + this.DEFAULT_WELCOME_INTENT_NAME);
+        this.kites.logger.error('No default story: ' + this.svIntent.DefaultWelcome);
         throw new Error('Story: ' + input);
       }
 
@@ -77,24 +71,14 @@ export class NLUController {
       return result;
     }
 
-    let intentName = await this.intentService.predict(input);
-    if (!intentName) {
-      intentName = this.DEFAULT_FALLBACK_INTENT_NAME;
-    } else {
-      this.kites.logger.info('Intent detected: ' + intentName);
-    }
-    let story = await StoryModel.findOne({ intentName }).lean();
-
-    if (!story) {
-      intentName = this.DEFAULT_FALLBACK_INTENT_NAME;
-      story = await StoryModel.findOne({ intentName }).lean();
-    }
+    const intentName = await this.svIntent.predict(input);
+    const story = await this.svIntent.findIntent(intentName);
 
     let responseResult;
     if (complete === 'false') {
-      responseResult = await this.nluService.buildNonCompleteResponse(story, body);
+      responseResult = await this.svNLU.buildNonCompleteResponse(story, body);
     } else {
-      responseResult = await this.nluService.buildCompleteResponse(story, body);
+      responseResult = await this.svNLU.buildCompleteResponse(story, body);
     }
 
     if (responseResult.complete) {

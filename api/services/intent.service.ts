@@ -15,10 +15,22 @@ class IntentService {
 
   constructor(
     @Inject(KITES_INSTANCE) private kites: KitesInstance,
-    private nluService: NLUService,
-    private intentClassifier: IntentClassifier,
+    private svIntentClassifier: IntentClassifier,
   ) {
+  }
 
+  /**
+   * Get Default fallback intent name
+   */
+  get DefaultFallback() {
+    return this.kites.options.modelConfig.DEFAULT_FALLBACK_INTENT_NAME;
+  }
+
+  /**
+   * Get default welcome intent name
+   */
+  get DefaultWelcome() {
+    return this.kites.options.modelConfig.DEFAULT_WELCOME_INTENT_NAME;
   }
 
   /**
@@ -61,7 +73,7 @@ class IntentService {
   train() {
     return this.getData()
       .then(([trainFeatures, trainLabels]) => {
-        return this.intentClassifier.train(trainFeatures, trainLabels);
+        return this.svIntentClassifier.train(trainFeatures, trainLabels);
       });
   }
 
@@ -71,7 +83,31 @@ class IntentService {
    * @param {String} text
    */
   predict(text) {
-    return this.intentClassifier.predict(text);
+    return this.svIntentClassifier.predict(text);
+  }
+
+  /**
+   * Find intent story by name
+   * @param intentName intent name
+   */
+  async findIntent(intentName: string) {
+    this.kites.logger.info(`Intent detected: ${intentName || '<empty/>'}`);
+    intentName = intentName || this.DefaultFallback;
+
+    this.kites.logger.info('Find intent story: ' + intentName);
+    let story = await StoryModel.findOne({ intentName }).lean();
+    if (!story) {
+      this.kites.logger.info(`Intent story not defined: ${intentName}, get default fallback!`);
+      story = await StoryModel.findOne({ intentName: this.DefaultFallback }).lean();
+    }
+    return story;
+  }
+
+  /**
+   * Get default welcome intent story
+   */
+  async getWelcomeIntent() {
+    return this.findIntent(this.DefaultWelcome);
   }
 }
 
