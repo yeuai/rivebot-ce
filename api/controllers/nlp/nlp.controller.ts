@@ -41,7 +41,7 @@ export class NLPController {
    * @param {Request} req
    * @param {Response} res
    */
-  @Get('pos/:text')
+  @Get('/pos/:text')
   posTag(
     @RequestParam('text') text: string,
     @QueryParam('storyId') storyId: string,
