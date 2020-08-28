@@ -1,0 +1,12 @@
+{
+  "delay": true,
+  "exit": true,
+  "retries": 3,
+  "extension": ["ts"],
+  "spec": ["test/**/*.spec.ts"],
+  "require": [
+    "ts-node/register",
+    "tsconfig-paths/register",
+    "app.ts"
+  ]
+}
