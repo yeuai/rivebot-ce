@@ -144,12 +144,12 @@ class SequenceLabeler {
   tag(storyId, sentence) {
     const modelFileName = path.resolve(this.options.modelFileDir, `${storyId}.model`);
     if (!fs.existsSync(modelFileName)) {
-      const tags = vntk.ner().tag(sentence);
+      const tags = vntk.ner().tag(sentence) as string[];
       const zipTokens = tags.map((tagged) => [tagged[0], tagged[1], tagged[3]]);
       return zipTokens;
     } else {
       const tagger = new Tagger();
-      const posTags = vntk.posTag().tag(sentence);
+      const posTags = vntk.posTag().tag(sentence) as string[];
       const feats = posTags.map((token, i) => this.features.word2features(posTags, i, this.template));
 
       tagger.open(modelFileName);

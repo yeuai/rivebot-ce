@@ -1,6 +1,6 @@
 import { KitesFactory, KitesInstance } from '@kites/core';
-import Express from '@kites/express';
-import Rest from '@kites/rest';
+// import Express from '@kites/express';
+// import Rest from '@kites/rest';
 
 import mongoose from 'mongoose';
 import { MongoDbServerDev, appRoutes } from './content/extensions';
@@ -13,6 +13,7 @@ async function bootstrap() {
   const app = await KitesFactory
     .create({
       loadConfig: true,
+      discover: true,
       providers: [
         WordFeatures,
         IntentClassifier,
@@ -23,8 +24,8 @@ async function bootstrap() {
         NLUService,
       ],
     })
-    .use(Express)
-    .use(Rest)
+    // .use(Express)
+    // .use(Rest)
     .use(appRoutes)
     .use(MongoDbServerDev)
     .on('db:connect', (uri: string, kites: KitesInstance) => {

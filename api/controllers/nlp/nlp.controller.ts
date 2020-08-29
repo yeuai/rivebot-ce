@@ -50,8 +50,9 @@ export class NLPController {
       const pretrainedTags = this.svNER.tag(storyId, text);
       return pretrainedTags;
     } else {
-      const tags = posTagger.tag(text).map((tokens) => [tokens[0], tokens[1], 'O']);
-      return tags;
+      const tags = posTagger.tag(text) as string[];
+      const vResult = tags.map((tokens) => [tokens[0], tokens[1], 'O']);
+      return vResult;
     }
   }
 

@@ -9,10 +9,11 @@ const storage = multer.diskStorage({
   destination(req, file, cb) {
     const now = new Date();
     const userDir = '/content/uploads/' + req.param('user', `${now.getFullYear()}/${now.getMonth()}/${now.getDate()}`);
-    const uploadDir = req.kites.appDirectory + userDir;
-    (req as any).uploadDir = userDir;
-    mkdirp(uploadDir, err => {
-      cb(null, uploadDir);
+    const vRequest = req as any;
+    const vUploadDir = vRequest.kites.appDirectory + userDir;
+    vRequest.uploadDir = userDir;
+    mkdirp(vUploadDir, err => {
+      cb(null, vUploadDir);
     });
   },
   filename(req, file, cb) {

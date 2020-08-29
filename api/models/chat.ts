@@ -1,9 +1,9 @@
-import { prop, Typegoose } from '@hasezoey/typegoose';
+import { getModelForClass, prop, arrayProp, Ref } from '@typegoose/typegoose';
 
 /**
  * Define user class
  */
-class Chat extends Typegoose {
+class Chat {
   @prop() from?: string;
   @prop() botId?: string;
   @prop() text?: string;
@@ -15,7 +15,7 @@ class Chat extends Typegoose {
 /**
  * Define chat logs model
  */
-const ChatModel = new Chat().getModelForClass(Chat, {
+const ChatModel = getModelForClass(Chat, {
   schemaOptions: {
     timestamps: true,
     collection: 'chat',

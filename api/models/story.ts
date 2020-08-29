@@ -1,4 +1,4 @@
-import { prop, Typegoose, arrayProp, Ref } from '@hasezoey/typegoose';
+import { getModelForClass, prop, arrayProp, Ref } from '@typegoose/typegoose';
 
 // class LabeledSentences extends Typegoose {
 //   @arrayProp({ items: String }) data: any[];
@@ -10,7 +10,7 @@ import { prop, Typegoose, arrayProp, Ref } from '@hasezoey/typegoose';
  * Define Story class
  * Phôi thiết kế kịch bản nói chuyện với người dùng
  */
-class Story extends Typegoose {
+class Story {
   @prop() storyName: string;
   @prop({
     required: true,
@@ -33,16 +33,17 @@ class Story extends Typegoose {
   }];
 
   @prop() labeledSentences?: [{
+    // _id?: string;
     data: any[];
     text: string;
-    label: string;
+    label?: string;
   }];
 }
 
 /**
  * Define story model
  */
-const StoryModel = new Story().getModelForClass(Story, {
+const StoryModel = getModelForClass(Story, {
   schemaOptions: {
     // _id: true,
     timestamps: true,

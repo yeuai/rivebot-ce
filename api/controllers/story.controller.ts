@@ -149,13 +149,14 @@ export class StoryController {
     }
 
     // find record details
+    const data: any = {
+      _id: labeledId,
+    };
     const result = await StoryModel.update({
       _id: storyId,
     }, {
       $pull: {
-        labeledSentences: {
-          _id: labeledId,
-        },
+        labeledSentences: data,
       },
     }).lean();
 
