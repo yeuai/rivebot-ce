@@ -12,7 +12,7 @@ import { SequenceLabelerService } from './core';
  */
 @Injectable()
 class NluService {
-  svIntent: IntentClassifier
+  svIntent: IntentClassifier;
   svSequenceLabeler: SequenceLabelerService;
 
   constructor(
