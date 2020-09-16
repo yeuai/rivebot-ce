@@ -1,0 +1,20 @@
+@ register_account post https://botscript.ai/api/account/register
+
+~ register username
+- Nhập tài khoản bạn muốn đăng ký?
+^ Vui lòng sử dụng chữ cái, số và dấu chấm (vd: vunb)
++ /^[a-z0-9](\.?[a-z0-9]){5,}/
+
+~ register email
+- Nhập email của bạn đang sử dụng?
+^ Mail này sẽ được sử dụng để xác thực việc đăng ký này là hợp lệ.
++ *{email}
+
+~ register password
+- Vui lòng nhập mật khẩu?
++ *{password}
+
+~ register confirm
+- Xác nhận thông tin:
+^ Tài khoản ${username}
+? yesno

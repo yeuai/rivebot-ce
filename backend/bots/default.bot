@@ -1,0 +1,20 @@
+# BOTSCRIPT 1
+
+! name Smart Bot
+! dob 2019-10-20
+
++ [hello]
+- Hello, human!
+- Xin chào!
+
+#+ *
+#- Yes
+
+> nlp
+
++ intent: mua_dien_thoai
+- Bạn muốn lấy điện thoại gì?
+
++ intent: cancel
+- Ok, đã hủy
+- Thì hủy

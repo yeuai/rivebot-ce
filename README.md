@@ -1,5 +1,5 @@
-Rivebot Community Edition
-=========================
+BotScriptAI Community Edition
+=============================
 
 An AI chatbot framework using VNTK and written in Nodejs.
 
@@ -56,15 +56,6 @@ Finally navigate to [http://localhost:3000/](http://localhost:3000/) to see proj
 # check logs
 > docker logs chatbot -f
 ```
-
-### Opt3 - Using @kites/cli from NPM
-
-We have ability to create a chatbot easily with Nodejs by using kites cli from NPM (look like a chatbot factory):
-
-1. Install kites cli: `npm install -g @kites/cli`
-2. Create a chatbot: `kites init my-chatbot --template chatbot`
-
-The rest you need to do is configure database and start application! [Read more kites document](https://kites.nodejs.vn/documentation/)
 
 # Dependencies
 

@@ -1,0 +1,47 @@
+! topics
+- warranty
+- support
+- feedback
+
+~ ask topic
+- What topic do you want to ask?
++ *{topic}
+
+~ buy phone
+- What do you want to buy
++ I want to buy *{item}
++ *{item}
+
++ cancel
+- You are canceled!
+
+@ geoip https://api.ipify.org/?format=json
+#- header: value
+#- header: value (2)
+
+# conditional flows
++ i want to ask
+* $topic == 'buy phone' ~> buy phone
+* $item == 'orange' -> Sorry! We don't have orange.
+~ ask topic
+- You are done! Item: $item
+
+# conditional command
++ what is my ip
+* true @> geoip
+- Here is your ip: $ip
+
+# conditional redirect
++ i dont wanna talk to you
+* true >> cancel
+- Ok!
+
+# conditional event
++ turn off the light
+* true +> notify
+- Ok!
+
+# conditional prompt
++ help me
+* true ?> topics
+- Please choose a topic!
