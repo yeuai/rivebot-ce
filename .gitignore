@@ -72,3 +72,5 @@ frontend
 uploads
 build
 dist
+frontend
+backend
