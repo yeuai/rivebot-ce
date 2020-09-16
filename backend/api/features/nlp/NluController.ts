@@ -30,9 +30,8 @@ export class NluController {
    * + Train ner
    */
   @Post('/:botid', AuthJwt.required())
-  async trainBot
-    (
-      @RequestParam('botid') botId: string
+  async trainBot(
+      @RequestParam('botid') botId: string,
     ) {
     this.kites.logger.info('Start training bot NLU: ' + botId);
     const vReulst = await this.svNlu.trainBot(botId);

@@ -1,5 +1,4 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
     "declaration": false,
@@ -12,25 +11,8 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "lib": [
-      "dom",
-      "es5",
-      "es2015",
-      "es2016"
-    ],
     "resolveJsonModule": true,
-    "target": "es6",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "paths": {
-      "@api/*": [
-        "api/*"
-      ],
-      "@content/*": [
-        "content/*"
-      ]
-    }
+    "target": "es2015",
   },
   "exclude": [
     "node_modules",
