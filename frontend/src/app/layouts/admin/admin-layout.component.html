@@ -1,0 +1,325 @@
+<div class="wrapper">
+  <!-- Main Header -->
+  <header class="main-header">
+
+    <!-- Logo -->
+    <a [routerLink]="['/']" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini">
+        <b>E</b>RM</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg">
+        <i class="fa fa-hospital-o"></i>&nbsp;<b>QL</b> Khám sức khỏe</span>
+    </a>
+
+    <!-- Header Navbar -->
+    <nav class="navbar navbar-static-top" role="navigation">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+      <!-- Navbar Right Menu -->
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- Messages: style can be found in dropdown.less-->
+          <li class="dropdown messages-menu">
+            <!-- Menu toggle button -->
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-cubes"></i>
+              <span class="label label-success">2</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="header">Có 2 ứng dụng được tích hợp</li>
+              <li>
+                <!-- inner menu: contains the messages -->
+                <ul class="menu">
+                  <li>
+                    <!-- start message -->
+                    <a href="https://gdbhyt.baohiemxahoi.gov.vn/" target="_blank">
+                      <div class="pull-left">
+                        <!-- BHYT Image -->
+                        <img src="assets/img/icon/bhyt.png" class="img-circle" alt="BHYT">
+                      </div>
+                      <!-- Message title and timestamp -->
+                      <h4>
+                        Cổng giám định bảo hiểm y tế
+                      </h4>
+                      <!-- The message -->
+                      <p>Bảo hiểm xã hội Việt Nam</p>
+                    </a>
+                  </li>
+                  <li>
+                    <!-- start message -->
+                    <a href="#" target="_blank">
+                      <div class="pull-left">
+                        <!-- PACS Image -->
+                        <img src="assets/img/icon/pacs4.png" class="img-circle" alt="PACS">
+                      </div>
+                      <!-- Message title and timestamp -->
+                      <h4>
+                        PACS
+                      </h4>
+                      <!-- The message -->
+                      <p>Hệ thống quản lý hình ảnh X-Quang, CT, ...</p>
+                    </a>
+                  </li>
+                  <!-- end message -->
+                </ul>
+                <!-- /.menu -->
+              </li>
+              <li class="footer">
+                <a href="#">Xem ứng dụng khác</a>
+              </li>
+            </ul>
+          </li>
+          <!-- /.messages-menu -->
+
+          <!-- Notifications Menu -->
+          <li class="dropdown notifications-menu" *ngIf="showElectronMenu">
+            <!-- Menu toggle button -->
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-hashtag"></i>
+              <span class="label label-warning">{{10 | dominate}}</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="header">Tiện ích hệ thống, phiên bản: {{APP_VERSION}}</li>
+              <li>
+                <!-- Inner Menu: contains the notifications -->
+                <ul class="menu">
+                  <li>
+                    <!-- start notification -->
+                    <a href="#" (click)="openAppFolder()">
+                      <i class="fa fa-shield text-aqua"></i> Open Logs
+                    </a>
+                  </li>
+                  <!-- end notification -->
+                  <li>
+                    <!-- start notification -->
+                    <a href="#" (click)="openDeveloperTools()">
+                      <i class="fa fa-wrench text-yellow"></i> Developers Tools
+                    </a>
+                  </li>
+                  <!-- end notification -->
+                  <li>
+                    <!-- start notification -->
+                    <a href="#" (click)="showNotify()">
+                      <i class="fa fa-users text-red"></i> {{10 | dominate}} tài khoản mới tạo hôm nay
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" (click)="showAboutInfo()">
+                      <i class="fa fa-info-circle text-green"></i> Thông tin hệ thống
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <i class="fa fa-save text-green"></i> Tải file download
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" (click)="testPrint()">
+                      <i class="fa fa-print text-blue"></i> Test print
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li class="footer">
+                <a href="#">Xem tất cả</a>
+              </li>
+            </ul>
+          </li>
+          <!-- User Account Menu -->
+          <li class="dropdown user user-menu">
+            <!-- Menu Toggle Button -->
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <!-- The user image in the navbar-->
+              <img [src]="userInfo.AvatarUrl" class="user-image" (error)="img1.src = 'assets/img/icon/avatar.png'" #img1>
+              <!-- hidden-xs hides the username on small devices so only the image appears. -->
+              <span class="hidden-xs">{{userInfo.HoTen || 'Xin chào!'}}</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- The user image in the menu -->
+              <li class="user-header">
+                <img [src]="userInfo.AvatarUrl" class="img-circle" (error)="img2.src = 'assets/img/icon/avatar.png'" #img2>
+                <p>
+                  {{userInfo.HoTen || 'Xin chào!'}}
+                  <small>{{tenKhoa}}</small>
+                </p>
+              </li>
+              <!-- Menu Body -->
+              <li class="user-body">
+                <div class="row">
+                  <div class="col-4 text-center">
+                    <a href="#">Followers</a>
+                  </div>
+                  <div class="col-4 text-center">
+                    <a href="#">Sales</a>
+                  </div>
+                  <div class="col-4 text-center">
+                    <a href="#">Friends</a>
+                  </div>
+                </div>
+                <!-- /.row -->
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                  <a href="#" class="btn btn-light btn-flat">Profile</a>
+                </div>
+                <div class="pull-right">
+                  <a (click)="logout()" class="btn btn-light btn-flat">Sign out</a>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <!-- Control Sidebar Toggle Button -->
+          <li>
+            <a href="#" data-toggle="control-sidebar">
+              <i class="fa fa-gears"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <!-- search form (Optional) -->
+      <form action="#" method="get" class="sidebar-form">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Search...">
+          <span class="input-group-btn">
+            <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+              <i class="fa fa-search"></i>
+            </button>
+          </span>
+        </div>
+      </form>
+      <!-- /.search form -->
+
+      <!-- Sidebar Menu -->
+      <ul class="sidebar-menu" data-widget="tree">
+        <ng-container *ngFor="let item of MENU_ITEMS">
+          <li class="header">{{item.label}}</li>
+          <li class="menu-item" *ngFor="let menu of item.main" [routerLinkActive]="['active']">
+            <a [routerLink]="[menu.routerLink]">
+              <i class="fa {{menu.icon}}"></i>
+              <span>{{menu.name}}</span>
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+      <!-- /.sidebar-menu -->
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper" app-page-content></div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <!-- To the right -->
+    <div class="pull-right hidden-xs">
+      {{config.TenBenhVien || 'Hệ thống quản lý khám sức khỏe điện tử.'}}
+    </div>
+    <!-- Default to the left -->
+    <strong>Copyright &copy; 2019
+      <a href="https://hosodientu.com" target="_blank">KHÁM SỨC KHỎE ĐIỆN TỬ</a>.</strong> All rights reserved.
+  </footer>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Create the tabs -->
+    <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+      <li class="active">
+        <a href="#control-sidebar-settings-tab" data-toggle="tab">
+          <i class="fa fa-print"></i>
+        </a>
+      </li>
+      <li>
+        <a href="#control-sidebar-home-tab" data-toggle="tab">
+          <i class="fa fa-home"></i>
+        </a>
+      </li>
+      <li>
+        <a href="#control-sidebar-stats-tab" data-toggle="tab">
+          <i class="fa fa-file"></i>
+        </a>
+      </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <!-- Home tab content -->
+      <div class="tab-pane" id="control-sidebar-home-tab">
+        <h3 class="control-sidebar-heading">Recent Activity</h3>
+        <ul class="control-sidebar-menu">
+          <li>
+            <a href="javascript:;">
+              <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+
+                <p>Will be 23 on April 24th</p>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- /.control-sidebar-menu -->
+
+        <h3 class="control-sidebar-heading">Tasks Progress</h3>
+        <ul class="control-sidebar-menu">
+          <li>
+            <a href="javascript:;">
+              <h4 class="control-sidebar-subheading">
+                Custom Template Design
+                <span class="pull-right-container">
+                  <span class="label label-danger pull-right">70%</span>
+                </span>
+              </h4>
+
+              <div class="progress progress-xxs">
+                <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- /.control-sidebar-menu -->
+
+      </div>
+      <!-- /.tab-pane -->
+      <!-- Stats tab content -->
+      <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
+      <!-- /.tab-pane -->
+      <!-- Settings tab content -->
+      <div class="tab-pane active" id="control-sidebar-settings-tab">
+        <form method="post">
+          <h3 class="control-sidebar-heading">Cấu hình máy in</h3>
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Silent Mode
+              <input type="checkbox" class="pull-right" checked>
+            </label>
+
+            <p>
+              Chế độ in chạy nền
+            </p>
+          </div>
+          <!-- /.form-group -->
+        </form>
+      </div>
+      <!-- /.tab-pane -->
+    </div>
+  </aside>
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
+  immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->

@@ -1,0 +1,27 @@
+<div class="container-fluid">
+  <div class="animated fadeIn">
+    <!--/.row-->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card card-accent-secondary">
+          <div class="card-header">
+            <strong class="h4">Biểu đồ ...</strong>
+            <span class="float-right">
+              <button type="button" class="btn btn-sm btn-primary">Tuần</button>
+              <button type="button" class="btn btn-sm btn-primary">Tháng</button>
+              <button type="button" class="btn btn-sm btn-primary">Năm</button>
+            </span>
+          </div>
+          <div class="card-body">
+            <div class="chart-wrapper">
+              <canvas baseChart class="chart" [datasets]="lineChartData" [labels]="lineChartLabels"
+                [options]="lineChartOptions" [colors]="lineChartColours" [legend]="lineChartLegend"
+                [chartType]="lineChartType" (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
