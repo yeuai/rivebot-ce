@@ -1,11 +1,12 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '@app/models/user.model';
-import { environment } from '@env/environment';
 import * as jwt_decode from 'jwt-decode';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { User } from '@app/models/user.model';
+import { environment, APP_SETTINGS } from '@env/environment';
 
 /**
  * Service quản lý xác thực và kiểm duyệt phân quyền
@@ -15,6 +16,7 @@ import { map } from 'rxjs/operators';
 export class AuthenticationService {
   private LOGIN_URL: string;
 
+  public loginActionSubject: BehaviorSubject<boolean>;
   public currentUserSubject: BehaviorSubject<User>;
   public currentUserInfo: Observable<User>;
 
@@ -25,9 +27,10 @@ export class AuthenticationService {
    */
   constructor(private http: HttpClient, private logger: NGXLogger) {
     const vUser = User.fromJSON(localStorage.getItem('currentUser'));
-    this.LOGIN_URL = `${environment.baseUrl}/oauth/token`;
+    this.loginActionSubject = new BehaviorSubject(false);
     this.currentUserSubject = new BehaviorSubject<User>(vUser);
     this.currentUserInfo = this.currentUserSubject.asObservable();
+    this.LOGIN_URL = APP_SETTINGS.ApiUrlAuth || '/oauth/token';
   }
 
   /**
@@ -74,6 +77,8 @@ export class AuthenticationService {
           localStorage.setItem('currentUser', JSON.stringify(user));
           user = User.from(user);
           this.currentUserSubject.next(user);
+          this.loginActionSubject.next(true);
+          this.logger.info('User login success!');
         }
 
         return user;
