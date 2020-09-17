@@ -8,13 +8,13 @@
               <div class="card p-4">
                 <div class="card-body">
                   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                    <h1>KHÁM SỨC KHỎE ĐIỆN TỬ</h1>
+                    <h1>Login</h1>
                     <p class="text-muted">Vui lòng đăng nhập hệ thống</p>
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <span class="input-group-text"><i class="icon-user"></i></span>
                       </div>
-                      <input type="text" class="form-control" placeholder="Enter Username or Email"
+                      <input type="text" class="form-control" placeholder="Username"
                         formControlName="username" autocomplete="username"
                         [ngClass]="{ 'is-invalid': submitted && f.username.errors }" required>
                     </div>
