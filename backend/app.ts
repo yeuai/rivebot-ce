@@ -27,7 +27,7 @@ import {
   NlpIntentService,
   NlpEntityService,
 } from './api';
-import { GetDbConnection, AppRoutes, ConfigPassportStrategy } from './extensions';
+import { GetDbConnection, AppRoutes, ConfigPassportStrategy, AutoReloadConfig } from './extensions';
 import pkg from './package.json';
 
 async function bootstrap() {
@@ -63,6 +63,7 @@ async function bootstrap() {
       version: pkg.version,
     })
     .use(AppRoutes)
+    .use(AutoReloadConfig)
     .use(GetDbConnection)
     .use(ConfigPassportStrategy)
     .on('db:connect', async (uri: string, kites: KitesInstance) => {

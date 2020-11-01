@@ -41,6 +41,12 @@ function AppRoutes(kites: KitesInstance) {
     app.get('/admin', (req, res) => res.view('admin'));
     app.get('/about', (req, res) => res.view('about'));
 
+    // app configuration
+    app.get('/_settings.js', (req, res) => {
+      res.type('text/javascript')
+        .send(`window._appsettings=JSON.parse(\`${kites.appSettings || '{}'}\`)`);
+    });
+
     // error handler
     app.use((err, req, res, next) => {
       if (typeof err === 'string') {

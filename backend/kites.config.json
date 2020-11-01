@@ -71,5 +71,6 @@
       "renderer": "renderFile",
       "path": "views"
     }
-  }
+  },
+  "appSettings": "app.json"
 }

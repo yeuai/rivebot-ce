@@ -30,7 +30,7 @@ export class AuthenticationService {
     this.loginActionSubject = new BehaviorSubject(false);
     this.currentUserSubject = new BehaviorSubject<User>(vUser);
     this.currentUserInfo = this.currentUserSubject.asObservable();
-    this.LOGIN_URL = APP_SETTINGS.ApiUrlAuth || '/oauth/token';
+    this.LOGIN_URL = APP_SETTINGS.ApiUrlAuth || '/account/authenticate';
   }
 
   /**
