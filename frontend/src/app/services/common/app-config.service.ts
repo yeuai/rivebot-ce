@@ -63,7 +63,7 @@ export class AppConfigService {
         this.logger.info('Required user login first!');
         return null;
       } else if (this.auth.currentUser.Domain == null) {
-        return this.logger.warn('Unknow user domain! Please log-out then login again.');
+        return this.logger.warn('Unknow user domain! Please log-out then login again to load user config.');
       }
 
       // Preparing send request

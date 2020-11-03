@@ -72,5 +72,6 @@
       "path": "views"
     }
   },
-  "appSettings": "app.json"
+  "appSettings": "app.json",
+  "jwtSecret": "demo"
 }

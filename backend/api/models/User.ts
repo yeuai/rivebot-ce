@@ -7,7 +7,7 @@ import { BotAgent } from './BotAgent';
 const pbkdf2Async = util.promisify(pbkdf2);
 const randomBytesAsync = util.promisify(randomBytes);
 
-@pre<User>('save', async function (next) {
+@pre<User>('save', async function(next) {
   try {
     this.stars = 0;
 
@@ -96,7 +96,7 @@ class User {
     return {
       id: this._id,
       username: this.username,
-      token: this.generateToken(secret),
+      access_token: this.generateToken(secret),
     };
   }
 
