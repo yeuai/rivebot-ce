@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "postinstall": "echo \"Error: please go to each projects backend/frontend\" && exit 1"
+  }
+}

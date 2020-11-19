@@ -34,6 +34,7 @@
     "@vntk/dictionary": "^1.0.0",
     "@yeuai/botscript": "^1.2.6",
     "crfsuite": "^1.0.1",
+    "express-http-proxy": "^1.6.2",
     "express-jwt": "^6.0.0",
     "fasttext": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
@@ -51,6 +52,7 @@
   "devDependencies": {
     "@types/chai": "^4.2.12",
     "@types/chai-as-promised": "^7.1.3",
+    "@types/express-http-proxy": "^1.6.1",
     "@types/mkdirp": "^1.0.1",
     "@types/mocha": "^5.2.7",
     "@types/mongoose": "^5.7.36",

@@ -2,6 +2,7 @@ import { KitesInstance } from '@kites/core';
 import { getLogger } from '@kites/core/logger';
 import { Express } from '@kites/express';
 import { format, transports } from 'winston';
+import proxy from 'express-http-proxy/';
 
 const logger = getLogger('BotScript', {
   format: format.combine(
@@ -36,8 +37,7 @@ function AppRoutes(kites: KitesInstance) {
       next();
     });
 
-    // quick setup
-    app.get('/', (req, res) => res.view('index'));
+    // main pages
     app.get('/admin', (req, res) => res.view('admin'));
     app.get('/about', (req, res) => res.view('about'));
 
@@ -46,6 +46,11 @@ function AppRoutes(kites: KitesInstance) {
       res.type('text/javascript')
         .send(`window._appsettings=JSON.parse(\`${kites.appSettings || '{}'}\`)`);
     });
+
+    // config for development
+    if (kites.options.env === 'development') {
+      app.use(proxy('localhost:4200'));
+    }
 
     // error handler
     app.use((err, req, res, next) => {
