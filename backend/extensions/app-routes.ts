@@ -15,7 +15,7 @@ const logger = getLogger('BotScript', {
   ],
 });
 
-logger.add(new transports.Console());
+// logger.add(new transports.Console());
 
 /**
  * Routes management
@@ -56,11 +56,12 @@ function AppRoutes(kites: KitesInstance) {
     app.use((err, req, res, next) => {
       if (typeof err === 'string') {
         kites.logger.error('Server Error: ' + err);
+        return res.status(500).send(err);
       } else if (err.name === 'UnauthorizedError') {
         kites.logger.error('Request is not authorized ' + err);
         return res.status(401).send('invalid token');
       } else {
-        logger.error(err);
+        logger.error('Server got error:', err);
       }
 
       // No more processing.

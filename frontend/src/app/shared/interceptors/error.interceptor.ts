@@ -26,7 +26,9 @@ export class ErrorInterceptor implements HttpInterceptor {
       // error dissection
       let error = err.statusText;
 
-      if (err.error != null) {
+      if (typeof err.error === 'string') {
+        error = `E${err.status}: ${err.error}`;
+      } else if (err.error != null) {
         const info = err.error;
         error = info.Message || info.error_description || `${err.status} ${err.statusText}`;
       }
