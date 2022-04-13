@@ -31,7 +31,7 @@
     "@kites/core": "^1.1.7",
     "@kites/express": "^1.1.7",
     "@kites/rest": "^1.1.7",
-    "async": "^2.6.3",
+    "async": "^3.2.2",
     "crfsuite": "^1.0.0",
     "fasttext": "^1.0.0",
     "handlebars": "^4.7.6",
