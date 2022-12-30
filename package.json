@@ -57,7 +57,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "cross-env": "^6.0.3",
-    "mocha": "^8.1.2",
+    "mocha": "^8.4.0",
     "mongodb-memory-server": "^5.2.0",
     "supertest": "^3.4.2",
     "ts-node-dev": "^1.0.0-pre.40",
