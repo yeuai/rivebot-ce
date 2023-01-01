@@ -61,7 +61,7 @@
     "mongodb-memory-server": "^5.2.0",
     "supertest": "^3.4.2",
     "ts-node-dev": "^1.0.0-pre.40",
-    "tsconfig-paths": "^3.9.0",
+    "tsconfig-paths": "^3.10.1",
     "tslint": "^5.18.0",
     "typescript": "^3.5.3"
   }
